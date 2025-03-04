@@ -1,9 +1,11 @@
 import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-abi-exporter";
 import { task } from "hardhat/config";
 import * as dotenv from "dotenv";
 import "@openzeppelin/hardhat-upgrades";
+import "@nomicfoundation/hardhat-ethers";
+import "hardhat-deploy";
+import "hardhat-deploy-ethers";
 
 dotenv.config();
 
@@ -13,11 +15,8 @@ const {
 } = process.env;
 
 task("accounts", "Prints the list of accounts", async (_taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
-
-  for (const account of accounts) {
-    console.log(account.address);
-  }
+  const accounts = await hre.getNamedAccounts();
+  console.table(accounts);
 });
 
 const config: HardhatUserConfig = {
@@ -54,6 +53,14 @@ const config: HardhatUserConfig = {
     flat: false,
     only: [],
     spacing: 4,
+  },
+  // Hardhat deploy
+  namedAccounts: {
+    deployer: 0,
+    acc1: 1,
+    acc2: 2,
+    acc3: 3,
+    proxyAdmin: 4,
   },
 };
 
