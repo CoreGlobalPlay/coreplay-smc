@@ -20,24 +20,18 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   });
 
   // Factory
-  const shinchaFactoryImpl = await deploy("ShinchaFactoryImpl", {
+  await deploy("ShinchaFactory", {
+    proxy: {
+      proxyContract: "UUPS",
+      execute: {
+        init: {
+          methodName: "initialize",
+          args: [shincha.address],
+        },
+      },
+    },
     contract: "ShinchaFactory",
     from: deployer,
-    args: [],
-    log: true,
-    autoMine: true,
-    skipIfAlreadyDeployed: true,
-  });
-  // Encode the initialize function call for the contract.
-  const ShinchaFactory = await ethers.getContractFactory("ShinchaFactory");
-  const initialize = ShinchaFactory.interface.encodeFunctionData("initialize", [
-    shincha.address,
-  ]);
-  // Deploy the ERC1967 Proxy, pointing to the implementation
-  deploy("ShinchaFactory", {
-    contract: "ERC1967Proxy",
-    from: deployer,
-    args: [shinchaFactoryImpl.address, initialize],
     log: true,
     autoMine: true,
     skipIfAlreadyDeployed: true,
