@@ -1,0 +1,10 @@
+{
+  "name": "bscTestnet",
+  "chainId": "97",
+  "addresses": {
+    "Shincha": "0x627623ece325E4812430e1F785eF0704dEEaF3e8",
+    "ShinchaFactory": "0xE73f3E380F57a4B78c79a85bad6971750Bc3E76B",
+    "ShinchaFactory_Implementation": "0x947619966Df77F977873F279CA678326b4382cFB",
+    "ShinchaFactory_Proxy": "0xE73f3E380F57a4B78c79a85bad6971750Bc3E76B"
+  }
+}
