@@ -29,12 +29,18 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
           args: [shincha.address],
         },
       },
+      upgradeFunction: {
+        methodName: "upgradeToAndCall",
+        upgradeArgs: ["{implementation}", "{data}"],
+      },
     },
     contract: "ShinchaFactory",
     from: deployer,
     log: true,
     autoMine: true,
-    skipIfAlreadyDeployed: true,
+    skipIfAlreadyDeployed: false,
   });
 };
+
+func.tags = ["deploy"];
 export default func;

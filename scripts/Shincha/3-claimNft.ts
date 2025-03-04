@@ -1,8 +1,9 @@
-import { ethers, network, getNamedAccounts } from "hardhat";
-import { ShinchaFactory } from "../../typechain-types";
+import { ethers, network, getNamedAccounts, upgrades } from "hardhat";
 import { keccak256 } from "ethers";
 import MerkleTree from "merkletreejs";
 import { readFileToArray } from "../helpers/utils";
+import { ShinchaFactory } from "../../typechain";
+import { Address } from "hardhat-deploy/types";
 
 async function main() {
   const shinchaFactoryContract: ShinchaFactory = await ethers.getContract(
@@ -25,7 +26,14 @@ async function main() {
   const proof = merkleTree.getHexProof(keccak256(deployer as `0x${string}`));
 
   console.log("Claim Nft from Shincha Factory");
-  await shinchaFactoryContract.claim(proof);
+  // await shinchaFactoryContract.claim(proof);
+
+  // console.log(await shinchaFactoryContract.claimedCount());
+
+  const implementationAddress = await upgrades.erc1967.getImplementationAddress(
+    shinchaFactoryContract.target as Address
+  );
+  console.log("Implementation contract address:", implementationAddress);
 }
 
 main().catch((error) => {

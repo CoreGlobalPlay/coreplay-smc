@@ -77,6 +77,10 @@ contract ShinchaFactory is
         return MerkleProof.verify(_merkleProof, _root, leafToCheck);
     }
 
+    function claimedCount() public view returns (uint256) {
+        return _claimedCount;
+    }
+
     //////////////
     /// Modifiers
     //////////////

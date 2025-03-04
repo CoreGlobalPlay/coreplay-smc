@@ -6,6 +6,7 @@ import "@openzeppelin/hardhat-upgrades";
 import "@nomicfoundation/hardhat-ethers";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
+import "@typechain/hardhat";
 
 dotenv.config();
 
@@ -61,6 +62,10 @@ const config: HardhatUserConfig = {
     acc2: 2,
     acc3: 3,
     proxyAdmin: 4,
+  },
+  typechain: {
+    outDir: "typechain",
+    target: "ethers-v6",
   },
 };
 
