@@ -202,22 +202,22 @@
     {
         "inputs": [
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "multiplier",
-                "type": "uint64"
+                "type": "uint256"
             }
         ],
         "name": "_calculateBetArray",
         "outputs": [
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "winRate",
-                "type": "uint64"
+                "type": "uint256"
             },
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "totalRate",
-                "type": "uint64"
+                "type": "uint256"
             }
         ],
         "stateMutability": "pure",
@@ -239,9 +239,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "multiplier",
-                "type": "uint64"
+                "type": "uint256"
             }
         ],
         "name": "crash",

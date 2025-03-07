@@ -10,7 +10,6 @@ contract Crash is AccessControl, Pausable {
     /// Constants
     // -----------
     bytes32 private constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-    bytes32 private constant WITHDRAWER = keccak256("WITHDRAWER");
     uint256 private constant FEE_DENOMINATOR = 10_000;
     uint256 public constant GAME_ID = 2;
 
@@ -38,9 +37,9 @@ contract Crash is AccessControl, Pausable {
         _grantRole(ADMIN_ROLE, sender);
 
         betFee = 350;
-        minBet = 25 ether / 1_000; // 0.025
-        maxBet = 2 ether; // 2
-        govFee = 1 ether / 100_000; // 0.00001
+        minBet = 25 ether / 10_000; // 0.0025
+        maxBet = 2 ether / 10; // 0.2
+        govFee = 1 ether / 1_000_000; // 0.000001
 
         feeReceiver = sender;
         govAddress = sender;
@@ -48,10 +47,10 @@ contract Crash is AccessControl, Pausable {
     }
 
     function _calculateBetArray(
-        uint64 multiplier
-    ) public pure returns (uint64 winRate, uint64 totalRate) {
+        uint256 multiplier
+    ) public pure returns (uint256 winRate, uint256 totalRate) {
         // Extract the fractional part by multiplying the multiplier by 100 and getting the remainder
-        uint64 fraction = multiplier % 100;
+        uint256 fraction = multiplier % 100;
 
         // Determine the number of repetitions based on the fractional part
         if (fraction == 25) {
@@ -65,14 +64,14 @@ contract Crash is AccessControl, Pausable {
         }
 
         // Calculate the total sum when the multiplier is used 'repeatMultiplier' times
-        uint64 totalSum = multiplier * winRate;
+        uint256 totalSum = multiplier * winRate;
 
         // Calculate the total number of elements needed (rounded up to ensure whole number)
         totalRate = (totalSum + 99) / 100; // Ceiling equivalent for total sum
     }
 
     // multiplier: 100 -> 10000 (x1 -> x100)
-    function crash(uint64 multiplier) external payable whenNotPaused {
+    function crash(uint256 multiplier) external payable whenNotPaused {
         // Validate must divisable to 25
         require(
             multiplier > 100 && multiplier < 10000 && multiplier % 25 == 0,
@@ -95,10 +94,10 @@ contract Crash is AccessControl, Pausable {
         uint256 _rewardAmount = (multiplier * _betAmount) / 100;
         require(address(this).balance >= _rewardAmount, "house out of balance");
 
-        (uint64 winRate, uint64 totalRate) = _calculateBetArray(multiplier);
+        (uint256 winRate, uint256 totalRate) = _calculateBetArray(multiplier);
 
         // check result
-        uint64 rand = getRandomUint64();
+        uint256 rand = getRandomUint();
         rand = rand % totalRate;
 
         bool isWin = rand < winRate;
@@ -143,7 +142,7 @@ contract Crash is AccessControl, Pausable {
         govAddress = gov;
     }
 
-    function withdrawAll(address addr) external onlyRole(WITHDRAWER) {
+    function withdrawAll(address addr) external onlyRole(ADMIN_ROLE) {
         address payable _to = payable(addr);
         _to.transfer(address(this).balance);
     }
@@ -151,7 +150,7 @@ contract Crash is AccessControl, Pausable {
     function withdraw(
         address addr,
         uint256 amount
-    ) external onlyRole(WITHDRAWER) {
+    ) external onlyRole(ADMIN_ROLE) {
         uint256 balance = address(this).balance;
         require(amount <= balance, "invalid amount");
         address payable _to = payable(addr);
@@ -178,12 +177,16 @@ contract Crash is AccessControl, Pausable {
 
     receive() external payable {}
 
-    function getRandomUint64() internal view returns (uint64) {
-        uint256 randomHash = uint256(
-            keccak256(
-                abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)
-            )
-        );
-        return uint64(randomHash);
+    function getRandomUint() internal view returns (uint256) {
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        block.timestamp,
+                        block.prevrandao,
+                        msg.sender
+                    )
+                )
+            );
     }
 }

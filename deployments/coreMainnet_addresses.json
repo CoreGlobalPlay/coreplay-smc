@@ -2,10 +2,10 @@
   "name": "coreMainnet",
   "chainId": "1116",
   "addresses": {
-    "CoinFlip": "0xd6aD262379b052D5bA03FF6c0bd6Ad1208b89D61",
-    "Crash": "0x7e42a122Ae5854CA3DB123D75630582159c85E83",
-    "Leaderboard": "0x2B9F74dDBb50dcad06532c3587CD4dbD73f1Ad57",
-    "Mines": "0x74fBA38f4399ef03f0058699A2cA80e6fA5F9186",
-    "Plinko": "0xF4f1E7d9454D2b31EC04bf95c36248404A3d14f7"
+    "CoinFlip": "0xfB50dF5C0579737CA71CAF13791222eda272389f",
+    "Crash": "0xBfA622B07bBCF51d35741b00431bffaDB0da14A1",
+    "Leaderboard": "0xde13874e9Be05Cbd3E55EbC29D74a1ce5652c6e4",
+    "Mines": "0x8f21d472bc1771291e6A28C193Cea8A7c608d840",
+    "Plinko": "0x8cb841C1a006C6bcE90903Cd19300cDCAECc24e4"
   }
 }

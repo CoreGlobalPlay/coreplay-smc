@@ -1,12 +1,12 @@
 import { ethers } from "hardhat";
-import { CoinFlip } from "../../typechain";
+import { CoinFlip, Plinko } from "../../typechain";
 
 async function main() {
-  const coinFlipContract = await ethers.getContract<CoinFlip>("CoinFlip");
+  const coinFlipContract = await ethers.getContract<Plinko>("Plinko");
 
-  const betAmount = ethers.parseEther("1");
+  const betAmount = ethers.parseEther("0.0025975");
   const receipt = await (
-    await coinFlipContract.flip(false, {
+    await coinFlipContract.plinko(false, 1, {
       value: betAmount,
     })
   ).wait();

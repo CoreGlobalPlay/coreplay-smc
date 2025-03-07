@@ -10,10 +10,9 @@ contract Plinko is AccessControl, Pausable {
     /// Constants
     // -----------
     bytes32 private constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-    bytes32 private constant WITHDRAWER = keccak256("WITHDRAWER");
     uint256 private constant FEE_DENOMINATOR = 10_000;
-    uint64 private constant DEGEN_LENGTH = 49;
-    uint64 private constant BASIC_LENGTH = 66;
+    uint256 private constant DEGEN_LENGTH = 49;
+    uint256 private constant BASIC_LENGTH = 66;
     uint256 private constant MAX_MULTIPLIER = 1500;
     uint256 public constant GAME_ID = 3;
 
@@ -28,8 +27,8 @@ contract Plinko is AccessControl, Pausable {
     uint256 public govFee;
     address public govAddress;
     address public leaderboard;
-    mapping(uint64 => uint256) public degenMultiplier;
-    mapping(uint64 => uint256) public basicMultiplier;
+    mapping(uint256 => uint256) public degenMultiplier;
+    mapping(uint256 => uint256) public basicMultiplier;
 
     // -----------
     // Events
@@ -49,9 +48,9 @@ contract Plinko is AccessControl, Pausable {
         _grantRole(ADMIN_ROLE, sender);
 
         betFee = 350;
-        minBet = 25 ether / 1_000; // 0.025
-        maxBet = 2 ether; // 2
-        govFee = 1 ether / 100_000; // 0.00001
+        minBet = 25 ether / 10_000; // 0.0025
+        maxBet = 2 ether / 10; // 0.2
+        govFee = 1 ether / 1_000_000; // 0.000001
 
         feeReceiver = sender;
         govAddress = sender;
@@ -66,17 +65,17 @@ contract Plinko is AccessControl, Pausable {
         degenMultiplier[48] = 1500;
 
         // Basic
-        for (uint64 i = 0; i < 48; i++) basicMultiplier[i] = 50;
-        for (uint64 i = 48; i < 58; i++) basicMultiplier[i] = 150;
-        for (uint64 i = 58; i < 65; i++) basicMultiplier[i] = 300;
+        for (uint256 i = 0; i < 48; i++) basicMultiplier[i] = 50;
+        for (uint256 i = 48; i < 58; i++) basicMultiplier[i] = 150;
+        for (uint256 i = 58; i < 65; i++) basicMultiplier[i] = 300;
         basicMultiplier[65] = 600;
     }
 
     function _calculateBetArray(
-        uint64 multiplier
-    ) public pure returns (uint64 winRate, uint64 totalRate) {
+        uint256 multiplier
+    ) public pure returns (uint256 winRate, uint256 totalRate) {
         // Extract the fractional part by multiplying the multiplier by 100 and getting the remainder
-        uint64 fraction = multiplier % 100;
+        uint256 fraction = multiplier % 100;
 
         // Determine the number of repetitions based on the fractional part
         if (fraction == 25) {
@@ -90,7 +89,7 @@ contract Plinko is AccessControl, Pausable {
         }
 
         // Calculate the total sum when the multiplier is used 'repeatMultiplier' times
-        uint64 totalSum = multiplier * winRate;
+        uint256 totalSum = multiplier * winRate;
 
         // Calculate the total number of elements needed (rounded up to ensure whole number)
         totalRate = (totalSum + 99) / 100; // Ceiling equivalent for total sum
@@ -99,31 +98,34 @@ contract Plinko is AccessControl, Pausable {
     function plinko(bool degen, uint256 ball) external payable whenNotPaused {
         address sender = _msgSender();
         // take fee
-        uint256 _betAmountBeforeFee = msg.value - (ball * govFee);
+        // 2597500000000000n - (1n * 10000000000000n)
+        uint256 _betAmountBeforeFee = msg.value - (ball * govFee); // 2587500000000000n
+        // (2587500000000000n * 10000n) / (10000n + 350n)
         uint256 _betAmount = (_betAmountBeforeFee * FEE_DENOMINATOR) /
             (FEE_DENOMINATOR + betFee) /
-            ball;
+            ball; // 2500000000000000n
         require(_betAmount >= minBet && _betAmount <= maxBet, "invalid bet");
 
-        uint256 fee = _betAmountBeforeFee - (_betAmount * ball);
+        uint256 fee = _betAmountBeforeFee - (_betAmount * ball); // 87500000000000n
         totalGame += ball;
 
         payable(govAddress).transfer(govFee);
         payable(feeReceiver).transfer(fee);
 
-        uint256 maxRewardAmount = (ball * (MAX_MULTIPLIER * _betAmount)) / 100;
+        // 1500n * 2500000000000000n / 100n
+        uint256 maxRewardAmount = (ball * (MAX_MULTIPLIER * _betAmount)) / 100; // 37500000000000000n
         require(
             address(this).balance >= maxRewardAmount,
             "house out of balance"
         );
 
-        uint64 totalRate = degen ? DEGEN_LENGTH : BASIC_LENGTH;
+        uint256 totalRate = degen ? DEGEN_LENGTH : BASIC_LENGTH;
 
         // check result
         uint totalRewardAmount = 0;
-        uint64 rand = getRandomUint64();
-        for (uint64 i = 0; i < ball; i++) {
-            uint64 randIndex = (rand * (i + 1)) % totalRate;
+        uint256 rand = getRandomUint();
+        for (uint256 i = 0; i < ball; i++) {
+            uint256 randIndex = (rand * (i + 1)) % totalRate;
 
             uint256 multiplier = degen
                 ? degenMultiplier[randIndex]
@@ -171,7 +173,7 @@ contract Plinko is AccessControl, Pausable {
         govAddress = gov;
     }
 
-    function withdrawAll(address addr) external onlyRole(WITHDRAWER) {
+    function withdrawAll(address addr) external onlyRole(ADMIN_ROLE) {
         address payable _to = payable(addr);
         _to.transfer(address(this).balance);
     }
@@ -179,7 +181,7 @@ contract Plinko is AccessControl, Pausable {
     function withdraw(
         address addr,
         uint256 amount
-    ) external onlyRole(WITHDRAWER) {
+    ) external onlyRole(ADMIN_ROLE) {
         uint256 balance = address(this).balance;
         require(amount <= balance, "invalid amount");
         address payable _to = payable(addr);
@@ -206,12 +208,16 @@ contract Plinko is AccessControl, Pausable {
 
     receive() external payable {}
 
-    function getRandomUint64() internal view returns (uint64) {
-        uint256 randomHash = uint256(
-            keccak256(
-                abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)
-            )
-        );
-        return uint64(randomHash);
+    function getRandomUint() internal view returns (uint256) {
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        block.timestamp,
+                        block.prevrandao,
+                        msg.sender
+                    )
+                )
+            );
     }
 }

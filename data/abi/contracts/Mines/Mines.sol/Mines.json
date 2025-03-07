@@ -210,9 +210,9 @@
         "name": "GRID_SIZE",
         "outputs": [
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "",
-                "type": "uint64"
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -221,27 +221,27 @@
     {
         "inputs": [
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "mines",
-                "type": "uint64"
+                "type": "uint256"
             },
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "level",
-                "type": "uint64"
+                "type": "uint256"
             }
         ],
         "name": "_calculateBetArray",
         "outputs": [
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "winRate",
-                "type": "uint64"
+                "type": "uint256"
             },
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "totalRate",
-                "type": "uint64"
+                "type": "uint256"
             },
             {
                 "internalType": "uint256",
@@ -268,14 +268,14 @@
     {
         "inputs": [
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "mines",
-                "type": "uint64"
+                "type": "uint256"
             },
             {
-                "internalType": "uint64",
+                "internalType": "uint256",
                 "name": "level",
-                "type": "uint64"
+                "type": "uint256"
             }
         ],
         "name": "checkMine",

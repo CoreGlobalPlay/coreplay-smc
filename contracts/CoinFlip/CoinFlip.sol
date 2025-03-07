@@ -10,7 +10,6 @@ contract CoinFlip is AccessControl, Pausable {
     /// Constants
     // -----------
     bytes32 private constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-    bytes32 private constant WITHDRAWER = keccak256("WITHDRAWER");
     uint256 private constant FEE_DENOMINATOR = 10_000;
     uint256 public constant GAME_ID = 1;
 
@@ -38,9 +37,9 @@ contract CoinFlip is AccessControl, Pausable {
         _grantRole(ADMIN_ROLE, sender);
 
         betFee = 350;
-        minBet = 25 ether / 1_000; // 0.025
-        maxBet = 2 ether; // 2
-        govFee = 1 ether / 100_000; // 0.00001
+        minBet = 25 ether / 10_000; // 0.025
+        maxBet = 2 ether / 10; // 0.2
+        govFee = 1 ether / 1_000_000; // 0.00001
 
         feeReceiver = sender;
         govAddress = sender;
@@ -109,7 +108,7 @@ contract CoinFlip is AccessControl, Pausable {
         govAddress = gov;
     }
 
-    function withdrawAll(address addr) external onlyRole(WITHDRAWER) {
+    function withdrawAll(address addr) external onlyRole(ADMIN_ROLE) {
         address payable _to = payable(addr);
         _to.transfer(address(this).balance);
     }
@@ -117,7 +116,7 @@ contract CoinFlip is AccessControl, Pausable {
     function withdraw(
         address addr,
         uint256 amount
-    ) external onlyRole(WITHDRAWER) {
+    ) external onlyRole(ADMIN_ROLE) {
         uint256 balance = address(this).balance;
         require(amount <= balance, "invalid amount");
         address payable _to = payable(addr);
