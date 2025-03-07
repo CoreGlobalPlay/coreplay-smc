@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "@coti-io/coti-contracts/contracts/utils/mpc/MpcCore.sol";
 import "../Leaderboard/Leaderboard.sol";
 
 contract Plinko is AccessControl, Pausable {
@@ -122,7 +121,7 @@ contract Plinko is AccessControl, Pausable {
 
         // check result
         uint totalRewardAmount = 0;
-        uint64 rand = MpcCore.decrypt(MpcCore.rand64());
+        uint64 rand = getRandomUint64();
         for (uint64 i = 0; i < ball; i++) {
             uint64 randIndex = (rand * (i + 1)) % totalRate;
 
@@ -206,4 +205,13 @@ contract Plinko is AccessControl, Pausable {
     }
 
     receive() external payable {}
+
+    function getRandomUint64() internal view returns (uint64) {
+        uint256 randomHash = uint256(
+            keccak256(
+                abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)
+            )
+        );
+        return uint64(randomHash);
+    }
 }

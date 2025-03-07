@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "@coti-io/coti-contracts/contracts/utils/mpc/MpcCore.sol";
 import "../Leaderboard/Leaderboard.sol";
 
 contract CoinFlip is AccessControl, Pausable {
@@ -48,7 +47,7 @@ contract CoinFlip is AccessControl, Pausable {
         leaderboard = leaderboard_;
     }
 
-    function flip(itBool calldata itSide) external payable whenNotPaused {
+    function flip(bool gtSide) external payable whenNotPaused {
         address sender = _msgSender();
         // take fee
         uint256 _betAmountBeforeFee = msg.value - govFee;
@@ -66,10 +65,8 @@ contract CoinFlip is AccessControl, Pausable {
         payable(feeReceiver).transfer(fee);
 
         // check result
-        gtBool gtResult = MpcCore.rand();
-        gtBool gtSide = MpcCore.validateCiphertext(itSide);
-        gtBool gtIsWin = MpcCore.eq(gtResult, gtSide);
-        bool isWin = MpcCore.decrypt(gtIsWin);
+        bool gtResult = getRandomBool();
+        bool isWin = gtResult == gtSide;
 
         uint256 earnAmount = 0;
         if (isWin) {
@@ -146,4 +143,13 @@ contract CoinFlip is AccessControl, Pausable {
     }
 
     receive() external payable {}
+
+    function getRandomBool() internal view returns (bool) {
+        uint256 randomHash = uint256(
+            keccak256(
+                abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)
+            )
+        );
+        return randomHash % 2 == 0;
+    }
 }

@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "@coti-io/coti-contracts/contracts/utils/mpc/MpcCore.sol";
 import "../Leaderboard/Leaderboard.sol";
 
 contract Mines is AccessControl, Pausable {
@@ -105,8 +104,7 @@ contract Mines is AccessControl, Pausable {
         require(address(this).balance >= _rewardAmount, "house out of balance");
 
         // check result
-        gtUint64 gtRand = MpcCore.rand64();
-        uint64 rand = MpcCore.decrypt(gtRand);
+        uint64 rand = getRandomUint64();
         rand = rand % totalRate;
 
         bool isWin = rand < winRate;
@@ -188,4 +186,13 @@ contract Mines is AccessControl, Pausable {
     }
 
     receive() external payable {}
+
+    function getRandomUint64() internal view returns (uint64) {
+        uint256 randomHash = uint256(
+            keccak256(
+                abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)
+            )
+        );
+        return uint64(randomHash);
+    }
 }
