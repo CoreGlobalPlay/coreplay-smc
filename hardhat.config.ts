@@ -22,14 +22,14 @@ task("accounts", "Prints the list of accounts", async (_taskArgs, hre) => {
 
 const config: HardhatUserConfig = {
   networks: {
-    bscTestnet: {
-      url: "https://bsc-testnet-rpc.publicnode.com",
-      chainId: 97,
+    coreTestnet: {
+      url: "https://rpc.test.btcs.network",
+      chainId: 1115,
       accounts: [testnetPrivateKey!],
     },
-    berachain: {
-      url: "https://rpc.berachain.com",
-      chainId: 80094,
+    coreMainnet: {
+      url: "https://rpc.coredao.org",
+      chainId: 1116,
       accounts: [mainnetPrivateKey!],
     },
   },
