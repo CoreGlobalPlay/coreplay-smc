@@ -1,0 +1,11 @@
+{
+  "name": "coreTestnet",
+  "chainId": "1115",
+  "addresses": {
+    "CoinFlip": "0x9b0FD493043E1ae6d4391e2017642a5FB3dB46A6",
+    "Crash": "0x697Dc058A27B0f1809112C5BeE30253AE0A2d3D1",
+    "Leaderboard": "0x875ed54Cc5AeAb05490C51e1c5a324BB4e5E86B7",
+    "Mines": "0xaA9873c465AEC0F1bFf13083B841638B97a951D4",
+    "Plinko": "0x64B7Fb368D704141923b235527D781D0593A9def"
+  }
+}

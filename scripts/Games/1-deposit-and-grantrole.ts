@@ -11,7 +11,7 @@ async function main() {
     "Leaderboard"
   );
 
-  const depositAmount = ethers.parseEther("10");
+  const depositAmount = ethers.parseEther("0.1");
   for (const gameName of ["CoinFlip", "Crash", "Mines", "Plinko"]) {
     const gameContract = await ethers.getContract(gameName);
 
