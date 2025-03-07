@@ -101,9 +101,12 @@ contract Crash is AccessControl, Pausable {
         rand = rand % totalRate;
 
         bool isWin = rand < winRate;
-        uint256 earnAmount = 0;
         if (isWin) {
             payable(sender).transfer(_rewardAmount);
+        }
+
+        uint256 earnAmount = 0;
+        if (_rewardAmount > msg.value) {
             earnAmount = _rewardAmount - msg.value;
         }
         Leaderboard(leaderboard).newPoint(
@@ -184,6 +187,7 @@ contract Crash is AccessControl, Pausable {
                     abi.encodePacked(
                         block.timestamp,
                         block.prevrandao,
+                        totalGame,
                         msg.sender
                     )
                 )

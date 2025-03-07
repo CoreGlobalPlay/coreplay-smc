@@ -67,9 +67,12 @@ contract CoinFlip is AccessControl, Pausable {
         bool gtResult = getRandomBool();
         bool isWin = gtResult == gtSide;
 
-        uint256 earnAmount = 0;
         if (isWin) {
             payable(sender).transfer(_rewardAmount);
+        }
+
+        uint256 earnAmount = 0;
+        if (_rewardAmount > msg.value) {
             earnAmount = _rewardAmount - msg.value;
         }
         Leaderboard(leaderboard).newPoint(
@@ -146,7 +149,12 @@ contract CoinFlip is AccessControl, Pausable {
     function getRandomBool() internal view returns (bool) {
         uint256 randomHash = uint256(
             keccak256(
-                abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)
+                abi.encodePacked(
+                    block.timestamp,
+                    block.prevrandao,
+                    totalGame,
+                    msg.sender
+                )
             )
         );
         return randomHash % 2 == 0;

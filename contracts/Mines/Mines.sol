@@ -110,7 +110,9 @@ contract Mines is AccessControl, Pausable {
         uint256 earnAmount = 0;
         if (isWin) {
             payable(sender).transfer(_rewardAmount);
-            earnAmount = _rewardAmount - msg.value;
+            if (_rewardAmount > msg.value) {
+                earnAmount = _rewardAmount - msg.value;
+            }
         } else {
             _rewardAmount = 0;
             multiplier = 0;
@@ -193,6 +195,7 @@ contract Mines is AccessControl, Pausable {
                     abi.encodePacked(
                         block.timestamp,
                         block.prevrandao,
+                        totalGame,
                         msg.sender
                     )
                 )

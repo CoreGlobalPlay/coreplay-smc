@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 import "../Leaderboard/Leaderboard.sol";
+import "hardhat/console.sol";
 
 contract Plinko is AccessControl, Pausable {
     // -----------
@@ -121,16 +122,23 @@ contract Plinko is AccessControl, Pausable {
 
         uint256 totalRate = degen ? DEGEN_LENGTH : BASIC_LENGTH;
 
+        console.log("maxRewardAmount: %s", maxRewardAmount);
+
         // check result
         uint totalRewardAmount = 0;
         uint256 rand = getRandomUint();
+        console.log("Rand: %s", rand);
+
         for (uint256 i = 0; i < ball; i++) {
             uint256 randIndex = (rand * (i + 1)) % totalRate;
+            console.log("randIndex: %s", randIndex);
 
             uint256 multiplier = degen
                 ? degenMultiplier[randIndex]
                 : basicMultiplier[randIndex];
             uint rewardAmount = (multiplier * _betAmount) / 100;
+            console.log("Reward Amount: %s", rewardAmount);
+
             totalRewardAmount += rewardAmount;
             emit Game(_betAmount, fee, sender, multiplier, rewardAmount);
         }
@@ -139,10 +147,15 @@ contract Plinko is AccessControl, Pausable {
             payable(sender).transfer(totalRewardAmount);
         }
 
+        uint earnAmount = 0;
+        if (totalRewardAmount > msg.value) {
+            earnAmount = totalRewardAmount - msg.value;
+        }
+
         Leaderboard(leaderboard).newPoint(
             GAME_ID,
             msg.sender,
-            totalRewardAmount - msg.value,
+            earnAmount,
             _betAmount * ball
         );
     }
@@ -215,6 +228,7 @@ contract Plinko is AccessControl, Pausable {
                     abi.encodePacked(
                         block.timestamp,
                         block.prevrandao,
+                        totalGame,
                         msg.sender
                     )
                 )
