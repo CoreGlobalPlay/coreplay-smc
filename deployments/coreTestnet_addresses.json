@@ -2,10 +2,10 @@
   "name": "coreTestnet",
   "chainId": "1115",
   "addresses": {
-    "CoinFlip": "0xEF03d03B44b41DFB57eaaeA857482Fe43E249534",
-    "Crash": "0x2F700AEEB56Aa7de4B19950b55Cfc4c9E75fcedB",
-    "Leaderboard": "0x3009c663dea16c207d10Ae660CdB822128209f3A",
-    "Mines": "0xdb960c00C492Afa68AC268dDfeFC5Ca240A228A0",
-    "Plinko": "0xcb9eA1F6b673dA8b21B0EcDE960d2BB80d1F54Cc"
+    "CoinFlip": "0x06eC928F7bb931Ca109b8f563ef2b81705518a8d",
+    "Crash": "0x48F13229686a56084c3FE9189D1Ce6a1315b7984",
+    "Leaderboard": "0xE06C31F080dFe1f4f9364dA9A8C5d10C0cb7d1c9",
+    "Mines": "0x61b980d948c2C4Afeeb6758B968AAC739A90C214",
+    "Plinko": "0xf8E7636bA4E341E88AA9181Ae571d3aB00d74B67"
   }
 }

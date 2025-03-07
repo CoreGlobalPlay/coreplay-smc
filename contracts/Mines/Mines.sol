@@ -191,14 +191,7 @@ contract Mines is AccessControl, Pausable {
     function getRandomUint() internal view returns (uint256) {
         return
             uint256(
-                keccak256(
-                    abi.encodePacked(
-                        block.timestamp,
-                        block.prevrandao,
-                        totalGame,
-                        msg.sender
-                    )
-                )
+                keccak256(abi.encodePacked(block.number, totalGame, msg.sender))
             );
     }
 }

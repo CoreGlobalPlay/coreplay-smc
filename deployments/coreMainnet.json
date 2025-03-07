@@ -3,7 +3,7 @@
   "chainId": "1116",
   "contracts": {
     "CoinFlip": {
-      "address": "0xA4fd087794d33d3180a1a1e61b7E2C6a5bDEd7dF",
+      "address": "0x5aD11fEDA899aFcF67F20AB65F659e9Db7C5582d",
       "abi": [
         {
           "inputs": [
@@ -594,7 +594,7 @@
       ]
     },
     "Crash": {
-      "address": "0x54C3a412A286D259CCfBc6E69B94069D6A158e35",
+      "address": "0x52F32DD5784B34b94C2aD72a0AAAf61BEBb3C5A2",
       "abi": [
         {
           "inputs": [
@@ -1209,7 +1209,7 @@
       ]
     },
     "Leaderboard": {
-      "address": "0x82B5dE75e5B4fb6630C1EB9046532FDE73aAc832",
+      "address": "0x0aA3b6C162B67667F293AC91D5a47Ca7023969AF",
       "abi": [
         {
           "inputs": [],
@@ -1503,7 +1503,7 @@
       ]
     },
     "Mines": {
-      "address": "0x58f0830E10046bC16708755619fA184463F403c7",
+      "address": "0xfA32a588fFEF212fAA25CDd2fAb606D798e90C1e",
       "abi": [
         {
           "inputs": [
@@ -2152,7 +2152,7 @@
       ]
     },
     "Plinko": {
-      "address": "0x4FadA49923016A30d2568840BD2A6d12C79Cb193",
+      "address": "0xd77986041cAc030093D1E38dA44Cd765D758B340",
       "abi": [
         {
           "inputs": [

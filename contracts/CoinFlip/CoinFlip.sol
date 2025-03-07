@@ -148,14 +148,7 @@ contract CoinFlip is AccessControl, Pausable {
 
     function getRandomBool() internal view returns (bool) {
         uint256 randomHash = uint256(
-            keccak256(
-                abi.encodePacked(
-                    block.timestamp,
-                    block.prevrandao,
-                    totalGame,
-                    msg.sender
-                )
-            )
+            keccak256(abi.encodePacked(block.number, totalGame, msg.sender))
         );
         return randomHash % 2 == 0;
     }
