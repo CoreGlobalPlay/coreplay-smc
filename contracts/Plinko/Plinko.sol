@@ -4,14 +4,12 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 import "../Leaderboard/Leaderboard.sol";
-import "hardhat/console.sol";
 
 contract Plinko is AccessControl, Pausable {
     // -----------
     /// Constants
     // -----------
     bytes32 private constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-    uint256 private constant FEE_DENOMINATOR = 10_000;
     uint256 private constant DEGEN_LENGTH = 49;
     uint256 private constant BASIC_LENGTH = 66;
     uint256 private constant MAX_MULTIPLIER = 1500;
@@ -21,12 +19,6 @@ contract Plinko is AccessControl, Pausable {
     /// Storages
     // -----------
     uint256 public totalGame;
-    uint256 public betFee;
-    uint256 public minBet;
-    uint256 public maxBet;
-    address public feeReceiver;
-    uint256 public govFee;
-    address public govAddress;
     address public leaderboard;
     mapping(uint256 => uint256) public degenMultiplier;
     mapping(uint256 => uint256) public basicMultiplier;
@@ -48,13 +40,6 @@ contract Plinko is AccessControl, Pausable {
         _grantRole(DEFAULT_ADMIN_ROLE, sender);
         _grantRole(ADMIN_ROLE, sender);
 
-        betFee = 350;
-        minBet = 25 ether / 10_000; // 0.0025
-        maxBet = 2 ether / 10; // 0.2
-        govFee = 1 ether / 1_000_000; // 0.000001
-
-        feeReceiver = sender;
-        govAddress = sender;
         leaderboard = leaderboard_;
 
         // Degen
@@ -99,106 +84,35 @@ contract Plinko is AccessControl, Pausable {
     function plinko(bool degen, uint256 ball) external payable whenNotPaused {
         address sender = _msgSender();
         // take fee
-        // 2597500000000000n - (1n * 10000000000000n)
-        uint256 _betAmountBeforeFee = msg.value - (ball * govFee); // 2587500000000000n
-        // (2587500000000000n * 10000n) / (10000n + 350n)
-        uint256 _betAmount = (_betAmountBeforeFee * FEE_DENOMINATOR) /
-            (FEE_DENOMINATOR + betFee) /
-            ball; // 2500000000000000n
-        require(_betAmount >= minBet && _betAmount <= maxBet, "invalid bet");
-
-        uint256 fee = _betAmountBeforeFee - (_betAmount * ball); // 87500000000000n
+        (uint256 _betAmount, uint256 fee) = Leaderboard(leaderboard).takeFee{
+            value: msg.value
+        }();
+        uint256 maxRewardAmount = (ball * (MAX_MULTIPLIER * _betAmount)) / 100;
+        require(leaderboard.balance >= maxRewardAmount, "house out of balance");
         totalGame += ball;
 
-        payable(govAddress).transfer(govFee);
-        payable(feeReceiver).transfer(fee);
-
-        // 1500n * 2500000000000000n / 100n
-        uint256 maxRewardAmount = (ball * (MAX_MULTIPLIER * _betAmount)) / 100; // 37500000000000000n
-        require(
-            address(this).balance >= maxRewardAmount,
-            "house out of balance"
-        );
-
         uint256 totalRate = degen ? DEGEN_LENGTH : BASIC_LENGTH;
-
-        console.log("maxRewardAmount: %s", maxRewardAmount);
 
         // check result
         uint totalRewardAmount = 0;
         uint256 rand = getRandomUint();
-        console.log("Rand: %s", rand);
-
         for (uint256 i = 0; i < ball; i++) {
             uint256 randIndex = (rand * (i + 1)) % totalRate;
-            console.log("randIndex: %s", randIndex);
 
             uint256 multiplier = degen
                 ? degenMultiplier[randIndex]
                 : basicMultiplier[randIndex];
             uint rewardAmount = (multiplier * _betAmount) / 100;
-            console.log("Reward Amount: %s", rewardAmount);
-
             totalRewardAmount += rewardAmount;
             emit Game(_betAmount, fee, sender, multiplier, rewardAmount);
         }
 
-        if (totalRewardAmount > 0) {
-            payable(sender).transfer(totalRewardAmount);
-        }
-
-        uint earnAmount = 0;
-        if (totalRewardAmount > msg.value) {
-            earnAmount = totalRewardAmount - msg.value;
-        }
-
-        Leaderboard(leaderboard).newPoint(
+        Leaderboard(leaderboard).earnReward(
             GAME_ID,
             msg.sender,
-            earnAmount,
+            totalRewardAmount,
             _betAmount * ball
         );
-    }
-
-    function setBetFee(uint256 val) public onlyRole(ADMIN_ROLE) {
-        betFee = val;
-    }
-
-    function setMinBet(uint256 val) public onlyRole(ADMIN_ROLE) {
-        require(val <= maxBet, "invalid bet");
-        minBet = val;
-    }
-
-    function setMaxBet(uint256 val) public onlyRole(ADMIN_ROLE) {
-        require(val >= minBet, "invalid bet");
-        maxBet = val;
-    }
-
-    function setGovFee(uint256 val) public onlyRole(ADMIN_ROLE) {
-        govFee = val;
-    }
-
-    function setFeeReceiver(address receiver) public onlyRole(ADMIN_ROLE) {
-        feeReceiver = receiver;
-    }
-
-    function setGovAddress(address gov) public onlyRole(ADMIN_ROLE) {
-        govAddress = gov;
-    }
-
-    function withdrawAll(address addr) external onlyRole(ADMIN_ROLE) {
-        address payable _to = payable(addr);
-        _to.transfer(address(this).balance);
-    }
-
-    function withdraw(
-        address addr,
-        uint256 amount
-    ) external onlyRole(ADMIN_ROLE) {
-        uint256 balance = address(this).balance;
-        require(amount <= balance, "invalid amount");
-        address payable _to = payable(addr);
-        _to.transfer(amount);
     }
 
     function setLeaderboard(address leaderboard_) public onlyRole(ADMIN_ROLE) {

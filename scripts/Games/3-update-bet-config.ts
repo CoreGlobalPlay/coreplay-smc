@@ -1,17 +1,17 @@
 import { ethers } from "hardhat";
 import { parseEther } from "ethers";
-import { CoinFlip } from "../../typechain";
+import { CoinFlip, Leaderboard } from "../../typechain";
 
 async function main() {
-  for (const gameName of ["CoinFlip", "Crash", "Mines", "Plinko"]) {
-    const gameContract: CoinFlip = await ethers.getContract(gameName);
+  const leaderBoardContract: Leaderboard = await ethers.getContract(
+    "Leaderboard"
+  );
 
-    /// SetBet
-    await gameContract.setMinBet(parseEther("0.00025"));
-    console.log("setMinBet: 0.00025");
-    await gameContract.setMaxBet(parseEther("0.2"));
-    console.log("setMaxBet: 0.2");
-  }
+  /// SetBet
+  await leaderBoardContract.setMinBet(parseEther("0.00025"));
+  console.log("setMinBet: 0.00025");
+  await leaderBoardContract.setMaxBet(parseEther("0.2"));
+  console.log("setMaxBet: 0.2");
 }
 
 main().catch((error) => {

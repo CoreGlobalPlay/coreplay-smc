@@ -5,23 +5,18 @@ import { Leaderboard } from "../../typechain";
 const GAME_ROLE = keccak256(toUtf8Bytes("GAME_ROLE"));
 
 async function main() {
-  const [deployer] = await ethers.getSigners();
-
   const leaderboardContract: Leaderboard = await ethers.getContract(
     "Leaderboard"
   );
 
   const depositAmount = ethers.parseEther("0.1");
+  await leaderboardContract.deposit({
+    value: depositAmount,
+  });
+  console.log("Deposit Success to contract leaderboard");
+
   for (const gameName of ["CoinFlip", "Crash", "Mines", "Plinko"]) {
     const gameContract = await ethers.getContract(gameName);
-
-    /// Deposit
-    const tx = await deployer.sendTransaction({
-      to: gameContract.target,
-      value: depositAmount,
-    });
-    await tx.wait();
-    console.log("Deposit Success to contract: ", gameName);
 
     /// GrantRole
     await leaderboardContract.grantRole(GAME_ROLE, gameContract.target);

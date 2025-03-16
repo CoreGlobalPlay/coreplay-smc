@@ -1,16 +1,15 @@
 import { ethers } from "hardhat";
 import { parseEther } from "ethers";
-import { CoinFlip } from "../../typechain";
+import { CoinFlip, Leaderboard } from "../../typechain";
 
 async function main() {
   const [deployer] = await ethers.getSigners();
-  for (const gameName of ["CoinFlip", "Crash", "Mines", "Plinko"]) {
-    const gameContract: CoinFlip = await ethers.getContract(gameName);
+  const leaderboardContract: Leaderboard = await ethers.getContract(
+    "Leaderboard"
+  );
 
-    /// SetBet
-    await gameContract.withdrawAll(deployer);
-    console.log("Withdrawed from ", gameName);
-  }
+  /// SetBet
+  await leaderboardContract.withdrawAll(deployer);
 }
 
 main().catch((error) => {
