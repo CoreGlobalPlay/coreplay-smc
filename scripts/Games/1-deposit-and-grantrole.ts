@@ -19,7 +19,12 @@ async function main() {
     const gameContract = await ethers.getContract(gameName);
 
     /// GrantRole
-    await leaderboardContract.grantRole(GAME_ROLE, gameContract.target);
+    const hasRole = await leaderboardContract.hasRole(
+      GAME_ROLE,
+      gameContract.target
+    );
+    if (!hasRole)
+      await leaderboardContract.grantRole(GAME_ROLE, gameContract.target);
     console.log("Granted GAME_ROLE to contract: ", gameName);
   }
 }

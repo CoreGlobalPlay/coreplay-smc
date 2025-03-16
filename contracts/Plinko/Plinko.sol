@@ -57,30 +57,6 @@ contract Plinko is AccessControl, Pausable {
         basicMultiplier[65] = 600;
     }
 
-    function _calculateBetArray(
-        uint256 multiplier
-    ) public pure returns (uint256 winRate, uint256 totalRate) {
-        // Extract the fractional part by multiplying the multiplier by 100 and getting the remainder
-        uint256 fraction = multiplier % 100;
-
-        // Determine the number of repetitions based on the fractional part
-        if (fraction == 25) {
-            winRate = 4;
-        } else if (fraction == 50) {
-            winRate = 2;
-        } else if (fraction == 75) {
-            winRate = 4; // Needs 4 repetitions to sum to a whole number
-        } else {
-            winRate = 1; // Whole numbers and zero fraction
-        }
-
-        // Calculate the total sum when the multiplier is used 'repeatMultiplier' times
-        uint256 totalSum = multiplier * winRate;
-
-        // Calculate the total number of elements needed (rounded up to ensure whole number)
-        totalRate = (totalSum + 99) / 100; // Ceiling equivalent for total sum
-    }
-
     function plinko(bool degen, uint256 ball) external payable whenNotPaused {
         address sender = _msgSender();
         // take fee
@@ -95,9 +71,9 @@ contract Plinko is AccessControl, Pausable {
 
         // check result
         uint totalRewardAmount = 0;
-        uint256 rand = getRandomUint();
         for (uint256 i = 0; i < ball; i++) {
-            uint256 randIndex = (rand * (i + 1)) % totalRate;
+            uint256 rand = getRandomUint(i);
+            uint256 randIndex = rand % totalRate;
 
             uint256 multiplier = degen
                 ? degenMultiplier[randIndex]
@@ -135,10 +111,12 @@ contract Plinko is AccessControl, Pausable {
 
     receive() external payable {}
 
-    function getRandomUint() internal view returns (uint256) {
+    function getRandomUint(uint256 i) internal view returns (uint256) {
         return
             uint256(
-                keccak256(abi.encodePacked(block.number, totalGame, msg.sender))
+                keccak256(
+                    abi.encodePacked(block.number, totalGame, msg.sender, i)
+                )
             );
     }
 }

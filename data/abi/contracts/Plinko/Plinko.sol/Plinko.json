@@ -209,30 +209,6 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "multiplier",
-                "type": "uint256"
-            }
-        ],
-        "name": "_calculateBetArray",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "winRate",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "totalRate",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "pure",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
             }
