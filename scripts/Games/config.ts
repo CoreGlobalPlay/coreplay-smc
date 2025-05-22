@@ -15,8 +15,13 @@ const mainnetScriptConfig: Config = {
     SwAddress: "0x33A5066f65f66161bEb3f827A3e40fce7d7A2e6C"
 };
 
+const hardhatScriptConfig: Config = {
+    swQueue: "0x0000000000000000000000000000000000000000000000000000000000000000",
+    SwAddress: "0x0000000000000000000000000000000000000000",
+};
 
 const configs: Record<string, Config> = {
+  hardhat: hardhatScriptConfig,
   "coreTestnet": testnetScriptConfig,
   "coreMainnet": mainnetScriptConfig,
 };

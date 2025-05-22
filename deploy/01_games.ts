@@ -44,7 +44,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
             args: [leaderboard.address, ScriptConfig.SwAddress, ScriptConfig.swQueue],
           },
           onUpgrade: {
-            methodName: "sequenceNumberToGameId",
+            methodName: "gameIdToRandomnessId",
             args: [0]
           }
         },
@@ -56,7 +56,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       skipIfAlreadyDeployed: false,
     });
     
-    await leaderboardContract.grantRole(GAME_ROLE, deployed.address);
+    const hasRole = await leaderboardContract.hasRole(GAME_ROLE, deployed.address)
+    if (!hasRole) {
+      console.log("Role not set, grant now...", deployed.address, GAME_ROLE)
+      await leaderboardContract.grantRole(GAME_ROLE, deployed.address);
+    }
   }
 };
 
