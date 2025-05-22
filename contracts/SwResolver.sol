@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 import {Structs} from "@switchboard-xyz/on-demand-solidity/structs/Structs.sol";
 import {ISwitchboard} from "@switchboard-xyz/on-demand-solidity/ISwitchboard.sol";

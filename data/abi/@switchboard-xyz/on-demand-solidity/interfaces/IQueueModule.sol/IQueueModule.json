@@ -1,0 +1,630 @@
+[
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "authority",
+                "type": "address"
+            }
+        ],
+        "name": "QueueAuthoritySet",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "fee",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "minAttestations",
+                "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "toleratedTimestampDelta",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "resultsMaxSize",
+                "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "oracleValidityLength",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "toleratedBlocksStaleness",
+                "type": "uint256"
+            }
+        ],
+        "name": "QueueConfigSet",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "authority",
+                "type": "address"
+            }
+        ],
+        "name": "QueueCreated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "mrEnclave",
+                "type": "bytes32"
+            }
+        ],
+        "name": "QueueMrEnclaveAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "mrEnclave",
+                "type": "bytes32"
+            }
+        ],
+        "name": "QueueMrEnclaveRemoved",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "QueueOraclesOverridden",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "mrEnclave",
+                "type": "bytes32"
+            }
+        ],
+        "name": "addQueueMrEnclave",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "queueId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "authority",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "fee",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "feeRecipient",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint64",
+                        "name": "minAttestations",
+                        "type": "uint64"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "toleratedTimestampDelta",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint8",
+                        "name": "resultsMaxSize",
+                        "type": "uint8"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "oracleValidityLength",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32[]",
+                        "name": "mrEnclaves",
+                        "type": "bytes32[]"
+                    },
+                    {
+                        "internalType": "bytes32[]",
+                        "name": "oracles",
+                        "type": "bytes32[]"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "toleratedBlocksStaleness",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lastQueueOverride",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "guardianQueueId",
+                        "type": "bytes32"
+                    }
+                ],
+                "internalType": "struct Structs.Queue",
+                "name": "queue",
+                "type": "tuple"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "authority",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "oracleId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "queueId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "mrEnclave",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "expirationTime",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "feesOwed",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Structs.Oracle[]",
+                "name": "oracles",
+                "type": "tuple[]"
+            }
+        ],
+        "name": "createQueue",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAllQueues",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "queueId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "authority",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "fee",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "feeRecipient",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint64",
+                        "name": "minAttestations",
+                        "type": "uint64"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "toleratedTimestampDelta",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint8",
+                        "name": "resultsMaxSize",
+                        "type": "uint8"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "oracleValidityLength",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32[]",
+                        "name": "mrEnclaves",
+                        "type": "bytes32[]"
+                    },
+                    {
+                        "internalType": "bytes32[]",
+                        "name": "oracles",
+                        "type": "bytes32[]"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "toleratedBlocksStaleness",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lastQueueOverride",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "guardianQueueId",
+                        "type": "bytes32"
+                    }
+                ],
+                "internalType": "struct Structs.Queue[]",
+                "name": "",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getQueue",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "queueId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "authority",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "fee",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "feeRecipient",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint64",
+                        "name": "minAttestations",
+                        "type": "uint64"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "toleratedTimestampDelta",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint8",
+                        "name": "resultsMaxSize",
+                        "type": "uint8"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "oracleValidityLength",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32[]",
+                        "name": "mrEnclaves",
+                        "type": "bytes32[]"
+                    },
+                    {
+                        "internalType": "bytes32[]",
+                        "name": "oracles",
+                        "type": "bytes32[]"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "toleratedBlocksStaleness",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lastQueueOverride",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "guardianQueueId",
+                        "type": "bytes32"
+                    }
+                ],
+                "internalType": "struct Structs.Queue",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getQueueMrEnclaves",
+        "outputs": [
+            {
+                "internalType": "bytes32[]",
+                "name": "",
+                "type": "bytes32[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32[]",
+                "name": "mrEnclaves",
+                "type": "bytes32[]"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "authority",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "oracleId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "queueId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "mrEnclave",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "expirationTime",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "feesOwed",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Structs.Oracle[]",
+                "name": "oracles",
+                "type": "tuple[]"
+            }
+        ],
+        "name": "queueOverride",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "mrEnclave",
+                "type": "bytes32"
+            }
+        ],
+        "name": "removeQueueMrEnclave",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "authority",
+                "type": "address"
+            }
+        ],
+        "name": "setQueueAuthority",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "fee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint8",
+                "name": "minAttestations",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint256",
+                "name": "toleratedTimestampDelta",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint8",
+                "name": "resultsMaxSize",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint256",
+                "name": "oracleValidityLength",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "toleratedBlocksStaleness",
+                "type": "uint256"
+            }
+        ],
+        "name": "setQueueConfig",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

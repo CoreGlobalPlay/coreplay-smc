@@ -1,0 +1,228 @@
+[
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "randomnessId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "authority",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint64",
+                "name": "minSettlementDelay",
+                "type": "uint64"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "oracleId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "RandomnessRequested",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "randomnessId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "oracleId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "RandomnessRerolled",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "randomnessId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getRandomness",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "randId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "queueId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "createdAt",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "authority",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "rollTimestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint64",
+                        "name": "minSettlementDelay",
+                        "type": "uint64"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "bytes32",
+                                "name": "oracleId",
+                                "type": "bytes32"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "oracleAuthority",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "value",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "settledAt",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct Structs.RandomnessResult",
+                        "name": "result",
+                        "type": "tuple"
+                    }
+                ],
+                "internalType": "struct Structs.Randomness",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "randomnessId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "authority",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "uint64",
+                "name": "minSettlementDelay",
+                "type": "uint64"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "oracleId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "requestRandomness",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "randomnessId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "authority",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "uint64",
+                "name": "minSettlementDelay",
+                "type": "uint64"
+            }
+        ],
+        "name": "requestRandomness",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "randomnessId",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "oracleId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "rerollRandomness",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "randomnessId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "rerollRandomness",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

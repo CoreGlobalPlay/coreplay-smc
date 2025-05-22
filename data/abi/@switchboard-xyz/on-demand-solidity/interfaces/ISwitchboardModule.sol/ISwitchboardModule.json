@@ -1,0 +1,237 @@
+[
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "feedId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "oracleId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "timestamp",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "int128",
+                "name": "result",
+                "type": "int128"
+            }
+        ],
+        "name": "FeedUpdate",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "oracleId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "oracleAddress",
+                "type": "address"
+            }
+        ],
+        "name": "OracleAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "queueId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "oracleId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "OracleRemoved",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "randomnessId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "oracleId",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "timestamp",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "result",
+                "type": "uint256"
+            }
+        ],
+        "name": "RandomnessSettled",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "aggregatorId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "findCurrentResult",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "int128",
+                        "name": "result",
+                        "type": "int128"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "minTimestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "maxTimestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "int128",
+                        "name": "minResult",
+                        "type": "int128"
+                    },
+                    {
+                        "internalType": "int128",
+                        "name": "maxResult",
+                        "type": "int128"
+                    },
+                    {
+                        "internalType": "int128",
+                        "name": "stdev",
+                        "type": "int128"
+                    },
+                    {
+                        "internalType": "int128",
+                        "name": "range",
+                        "type": "int128"
+                    },
+                    {
+                        "internalType": "int128",
+                        "name": "mean",
+                        "type": "int128"
+                    }
+                ],
+                "internalType": "struct Structs.CurrentResult",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes[]",
+                "name": "updates",
+                "type": "bytes[]"
+            }
+        ],
+        "name": "getFee",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "feedId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "latestUpdate",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "oracleId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "int128",
+                        "name": "result",
+                        "type": "int128"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Structs.Update",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes[]",
+                "name": "updates",
+                "type": "bytes[]"
+            }
+        ],
+        "name": "updateFeeds",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    }
+]
