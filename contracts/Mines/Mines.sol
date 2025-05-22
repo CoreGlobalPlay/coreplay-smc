@@ -1,11 +1,27 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/utils/Pausable.sol";
 import "../Leaderboard/Leaderboard.sol";
+import { SwResolver } from "../SwResolver.sol";
+import { AccessControlUpgradeable } from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import { PausableUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+import { UUPSUpgradeable } from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract Mines is AccessControl, Pausable {
+contract Mines is UUPSUpgradeable,
+    AccessControlUpgradeable,
+    PausableUpgradeable,
+    SwResolver {
+
+    // -----------
+    /// Structs
+    // -----------
+    struct BetInfo {
+        address user;
+        uint256 mines;
+        uint256 level;
+        uint256 betAmount;
+    }
+
     // -----------
     /// Constants
     // -----------
@@ -18,25 +34,25 @@ contract Mines is AccessControl, Pausable {
     // -----------
     uint256 public totalGame;
     address public leaderboard;
+    mapping(uint256 => BetInfo) public gameIdToBetInfo;
 
     // -----------
     // Events
     // -----------
-    event Game(
-        uint256 betAmount,
-        uint256 fee,
-        address user,
-        uint256 reward,
-        uint256 multiplier
-    );
+    event NewBet(address indexed user, uint256 indexed gameId, uint256 betAmount, uint256 mines, uint256 level, uint256 fee);
+    event Game(address indexed user, uint256 indexed gameId, uint256 betAmount, uint256 mines, uint256 level, uint256 payout);
 
-    constructor(address leaderboard_) {
-        address sender = _msgSender();
+    function initialize(address leaderboard_, address switchboard_, bytes32 swQueue_) public initializer {
+        __Context_init_unchained();
+        __AccessControl_init_unchained();
+        __Pausable_init_unchained();
+        __UUPSUpgradeable_init();
 
-        _grantRole(DEFAULT_ADMIN_ROLE, sender);
-        _grantRole(ADMIN_ROLE, sender);
+        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _grantRole(ADMIN_ROLE, _msgSender());
 
         leaderboard = leaderboard_;
+        setupResolver(switchboard_, swQueue_);
     }
 
     function _calculateBetArray(
@@ -72,32 +88,66 @@ contract Mines is AccessControl, Pausable {
             value: msg.value
         }();
 
+        uint256 gameId = totalGame;
+        requestRandomNumber(gameId);
+        BetInfo memory betInfo = BetInfo({
+            user: sender,
+            mines: mines,
+            level: level,
+            betAmount: _betAmount
+        });
+        gameIdToBetInfo[totalGame] = betInfo;
+
+        totalGame = gameId + 1;
+
+        // New Bet
+        emit NewBet(sender, gameId, _betAmount, mines, level, fee);
+    }
+
+    // handle entropy callback
+    function handleRandomNumber(
+        uint256 gameId,
+        uint256 randomNumber
+    ) internal override whenNotPaused {
+        BetInfo storage betInfo = gameIdToBetInfo[gameId];
+        uint256 mines = betInfo.mines;
+        uint256 level = betInfo.level;
+        uint256 betAmount = betInfo.betAmount;
+        address user = betInfo.user;
+
+        if (
+            betAmount == 0
+        ) {
+            // The game is ended
+            return;
+        }
+        // Set bet amount to zero to prevent re-entrancy
+        betInfo.betAmount = 0;
+
         (
             uint256 winRate,
             uint256 totalRate,
             uint256 multiplier
         ) = _calculateBetArray(mines, level);
-        uint256 _rewardAmount = (multiplier * _betAmount) / 100;
-        require(leaderboard.balance >= _rewardAmount, "house out of balance");
-        totalGame = totalGame + 1;
 
         // check result
-        uint256 rand = getRandomUint();
-        rand = rand % totalRate;
+        uint256 rand = randomNumber % totalRate;
+
+        uint256 rewardAmount = (multiplier * betAmount) / 100;
 
         bool isWin = rand < winRate;
         if (!isWin) {
-            _rewardAmount = 0;
+            rewardAmount = 0;
             multiplier = 0;
         }
         Leaderboard(leaderboard).earnReward(
             GAME_ID,
-            msg.sender,
-            _rewardAmount,
-            _betAmount
+            user,
+            rewardAmount,
+            betAmount
         );
 
-        emit Game(_betAmount, fee, sender, _rewardAmount, multiplier);
+        emit Game(user, gameId, betAmount, mines, level, rewardAmount);
     }
 
     function setLeaderboard(address leaderboard_) public onlyRole(ADMIN_ROLE) {
@@ -126,4 +176,6 @@ contract Mines is AccessControl, Pausable {
                 keccak256(abi.encodePacked(block.number, totalGame, msg.sender))
             );
     }
+
+    function _authorizeUpgrade(address) internal override onlyRole(ADMIN_ROLE) {}
 }

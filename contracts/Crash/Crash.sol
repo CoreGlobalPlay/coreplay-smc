@@ -1,11 +1,26 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/utils/Pausable.sol";
 import "../Leaderboard/Leaderboard.sol";
+import { SwResolver } from "../SwResolver.sol";
+import { AccessControlUpgradeable } from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import { PausableUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+import { UUPSUpgradeable } from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract Crash is AccessControl, Pausable {
+contract Crash is 
+    UUPSUpgradeable,
+    AccessControlUpgradeable,
+    PausableUpgradeable,
+    SwResolver {
+    // -----------
+    /// Structs
+    // -----------
+    struct BetInfo {
+        address user;
+        uint256 betAmount;
+        uint256 cashOut;
+    }
+
     // -----------
     /// Constants
     // -----------
@@ -17,19 +32,26 @@ contract Crash is AccessControl, Pausable {
     // -----------
     uint256 public totalGame;
     address public leaderboard;
+    BetInfo[] public bets;
 
     // -----------
     // Events
     // -----------
-    event Game(uint256 betAmount, uint256 fee, address user, bool isWin);
+    event NewGame(uint256 newGameId, uint256 maxCashOutToWin);
+    event NewBet(address indexed user, uint256 indexed gameId, uint256 betAmount, uint256 cashOut, uint256 fee);
+    event Game(address indexed user, uint256 indexed gameId, uint256 betAmount, uint256 cashOut, uint256 payout);
 
-    constructor(address leaderboard_) {
-        address sender = _msgSender();
+    function initialize(address leaderboard_, address switchboard_, bytes32 swQueue_) public initializer {
+        __Context_init_unchained();
+        __AccessControl_init_unchained();
+        __Pausable_init_unchained();
+        __UUPSUpgradeable_init();
 
-        _grantRole(DEFAULT_ADMIN_ROLE, sender);
-        _grantRole(ADMIN_ROLE, sender);
+        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _grantRole(ADMIN_ROLE, _msgSender());
 
         leaderboard = leaderboard_;
+        setupResolver(switchboard_, swQueue_);
     }
 
     function _calculateBetArray(
@@ -56,12 +78,12 @@ contract Crash is AccessControl, Pausable {
         totalRate = (totalSum + 99) / 100; // Ceiling equivalent for total sum
     }
 
-    // multiplier: 100 -> 10000 (x1 -> x100)
-    function crash(uint256 multiplier) external payable whenNotPaused {
+    // cashOut = multiplier: 100 -> 10000 (x1 -> x100)
+    function bet(uint256 cashOut) external payable whenNotPaused {
         // Validate must divisable to 25
         require(
-            multiplier > 100 && multiplier < 10000 && multiplier % 25 == 0,
-            "invalid multiplier"
+            cashOut > 100 && cashOut < 10000 && cashOut % 25 == 0,
+            "invalid cashOut"
         );
 
         address sender = _msgSender();
@@ -69,32 +91,105 @@ contract Crash is AccessControl, Pausable {
         (uint256 _betAmount, uint256 fee) = Leaderboard(leaderboard).takeFee{
             value: msg.value
         }();
-        uint256 _rewardAmount = (multiplier * _betAmount) / 100;
-        require(leaderboard.balance >= _rewardAmount, "house out of balance");
-        totalGame = totalGame + 1;
+        
+        // push bet info
+        BetInfo memory betInfo = BetInfo({
+            user: sender,
+            betAmount: _betAmount,
+            cashOut: cashOut
+        });
+        bets.push(betInfo);
 
-        (uint256 winRate, uint256 totalRate) = _calculateBetArray(multiplier);
+        // New Bet
+        emit NewBet(sender, totalGame, _betAmount, cashOut, fee);
+    }
 
-        // check result
-        uint256 rand = getRandomUint();
-        rand = rand % totalRate;
-
-        bool isWin = rand < winRate;
-        if (!isWin) {
-            _rewardAmount = 0;
+    // handle entropy callback
+    function handleRandomNumber(
+        uint256 gameId,
+        uint256 randomNumber
+    ) internal override whenNotPaused {
+        if (
+            gameId != totalGame
+        ) {
+            // This is not the game we are looking for
+            // Cannot use require because we ensure the callback cannot be failed
+            return;
         }
-        Leaderboard(leaderboard).earnReward(
-            GAME_ID,
-            msg.sender,
-            _rewardAmount,
-            _betAmount
-        );
 
-        emit Game(_betAmount, fee, sender, isWin);
+        uint256 maxCashOutToWin = 100;
+        uint256 minCashOutToLose = 10000;
+
+        for (uint256 i = 0; i < bets.length; i++) {
+            BetInfo storage betInfo = bets[i];
+            uint256 cashOut = betInfo.cashOut;
+            uint256 betAmount = betInfo.betAmount;
+            address user = betInfo.user;
+
+            uint256 _rewardAmount = (cashOut * betAmount) / 100;
+
+            // win
+            if (cashOut <= maxCashOutToWin) {
+                Leaderboard(leaderboard).earnReward(
+                    GAME_ID,
+                    user,
+                    _rewardAmount,
+                    betAmount
+                );
+                emit Game(user, gameId, betAmount, cashOut, _rewardAmount);
+                continue;
+            }
+
+            // lose
+            if (cashOut >= minCashOutToLose) {
+                emit Game(user, gameId, betAmount, cashOut, 0);
+                continue;
+            }  
+
+            /// calculate rate
+            (uint256 winRate, uint256 totalRate) = _calculateBetArray(cashOut);
+
+            // check result
+            uint256 rand = randomNumber % totalRate;
+
+            bool isWin = rand < winRate;
+
+            // check if win
+            if (!isWin) {
+                _rewardAmount = 0;
+                // all cashout bigger than this will be lost
+                minCashOutToLose = cashOut;
+            } else {
+                // all cashout lower than this will be win
+                maxCashOutToWin = cashOut;
+            }
+
+            Leaderboard(leaderboard).earnReward(
+                GAME_ID,
+                user,
+                _rewardAmount,
+                betAmount
+            );
+            emit Game(user, gameId, betAmount, cashOut, _rewardAmount);
+        }
+
+        totalGame = totalGame + 1;
+        delete bets;
+
+        emit NewGame(totalGame, maxCashOutToWin);
     }
 
     function setLeaderboard(address leaderboard_) public onlyRole(ADMIN_ROLE) {
         leaderboard = leaderboard_;
+    }
+
+    function launch() external payable whenNotPaused {
+        if (bets.length > 0) {
+            requestRandomNumber(totalGame);
+        } else {
+            totalGame = totalGame + 1;
+            emit NewGame(totalGame, 100);
+        }
     }
 
     /**
@@ -119,4 +214,6 @@ contract Crash is AccessControl, Pausable {
                 keccak256(abi.encodePacked(block.number, totalGame, msg.sender))
             );
     }
+
+    function _authorizeUpgrade(address) internal override onlyRole(ADMIN_ROLE) {}
 }

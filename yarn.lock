@@ -1425,10 +1425,10 @@
     "@nomicfoundation/solidity-analyzer-linux-x64-musl" "0.1.2"
     "@nomicfoundation/solidity-analyzer-win32-x64-msvc" "0.1.2"
 
-"@openzeppelin/contracts-upgradeable@^5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-5.2.0.tgz#caf9a6eaf4f16d7f90f9b45a6db4e7b125f4b13b"
-  integrity sha512-mZIu9oa4tQTlGiOJHk6D3LdJlqFqF6oNOSn6S6UVJtzfs9UsY9/dhMEbAVTwElxUtJnjpf6yA062+oBp+eOyPg==
+"@openzeppelin/contracts-upgradeable@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-5.3.0.tgz#79dba09ab0b4bb49f21544ea738b9de016b0ceea"
+  integrity sha512-yVzSSyTMWO6rapGI5tuqkcLpcGGXA0UA1vScyV5EhE5yw8By3Ewex9rDUw8lfVw0iTkvR/egjfcW5vpk03lqZg==
 
 "@openzeppelin/contracts@^5.2.0":
   version "5.2.0"
@@ -2058,6 +2058,11 @@
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/@solidity-parser/parser/-/parser-0.19.0.tgz#37a8983b2725af9b14ff8c4a475fa0e98d773c3f"
   integrity sha512-RV16k/qIxW/wWc+mLzV3ARyKUaMUTBy9tOLMzFhtNSKYeTAanQ3a5MudJKf/8arIFnA2L27SNjarQKmFg0w/jA==
+
+"@switchboard-xyz/on-demand-solidity@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@switchboard-xyz/on-demand-solidity/-/on-demand-solidity-0.0.4.tgz#7cb7e5a4676e22a8be55113e919cfe506e242128"
+  integrity sha512-YQmTwDF4je6eFX+XlanWK8P0kRmQfz0ChqyIG60Nc7LurQqeyf5LQF5JcYg/dt64lxYWm2qIdCTZkI/XWFs3Vw==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.11"

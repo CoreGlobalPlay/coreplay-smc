@@ -1,11 +1,29 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/utils/Pausable.sol";
 import "../Leaderboard/Leaderboard.sol";
+import { SwResolver } from "../SwResolver.sol";
+import {Structs} from "@switchboard-xyz/on-demand-solidity/structs/Structs.sol";
+import {ISwitchboard} from "@switchboard-xyz/on-demand-solidity/ISwitchboard.sol";
+import { AccessControlUpgradeable } from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import { PausableUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+import { UUPSUpgradeable } from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract Plinko is AccessControl, Pausable {
+contract Plinko is UUPSUpgradeable,
+    AccessControlUpgradeable,
+    PausableUpgradeable,
+    SwResolver {
+
+    // -----------
+    /// Structs
+    // -----------
+    struct BetInfo {
+        address user;
+        bool degen;
+        uint256 balls;
+        uint256 betAmount;
+    }
+
     // -----------
     /// Constants
     // -----------
@@ -22,19 +40,21 @@ contract Plinko is AccessControl, Pausable {
     address public leaderboard;
     mapping(uint256 => uint256) public degenMultiplier;
     mapping(uint256 => uint256) public basicMultiplier;
+    mapping(uint256 => BetInfo) public gameIdToBetInfo;
 
     // -----------
     // Events
     // -----------
-    event Game(
-        uint256 betAmount,
-        uint256 fee,
-        address user,
-        uint256 multiplier,
-        uint256 rewardAmount
-    );
+    event NewBet(address indexed user, uint256 indexed gameId, uint256 totalBetAmount, uint256 balls, uint256 fee);
+    event Game(address indexed user, uint256 indexed gameId, uint256 totalBetAmount, uint256 balls, uint256 payout);
+    event Ball(uint256 indexed gameId, uint256 multiplier);
 
-    constructor(address leaderboard_) {
+    function initialize(address leaderboard_, address switchboard_, bytes32 swQueue_) public initializer {
+        __Context_init_unchained();
+        __AccessControl_init_unchained();
+        __Pausable_init_unchained();
+        __UUPSUpgradeable_init();
+
         address sender = _msgSender();
 
         _grantRole(DEFAULT_ADMIN_ROLE, sender);
@@ -55,39 +75,78 @@ contract Plinko is AccessControl, Pausable {
         for (uint256 i = 48; i < 58; i++) basicMultiplier[i] = 150;
         for (uint256 i = 58; i < 65; i++) basicMultiplier[i] = 300;
         basicMultiplier[65] = 600;
+
+        // Setup VRF
+        setupResolver(switchboard_, swQueue_);
     }
 
-    function plinko(bool degen, uint256 ball) external payable whenNotPaused {
+    function plinko(bool degen, uint256 balls) external payable whenNotPaused {
+
         address sender = _msgSender();
         // take fee
         (uint256 _betAmount, uint256 fee) = Leaderboard(leaderboard).takeFee{
             value: msg.value
         }();
-        uint256 maxRewardAmount = (ball * (MAX_MULTIPLIER * _betAmount)) / 100;
-        require(leaderboard.balance >= maxRewardAmount, "house out of balance");
-        totalGame += ball;
+
+        uint256 gameId = totalGame;
+        requestRandomNumber(gameId);
+        BetInfo memory betInfo = BetInfo({
+            user: sender,
+            degen: degen,
+            balls: balls,
+            betAmount: _betAmount
+        });
+        gameIdToBetInfo[totalGame] = betInfo;
+
+        totalGame = gameId + 1;
+
+        // New Bet
+        emit NewBet(sender, gameId, _betAmount, balls, fee);
+    }
+
+    // handle entropy callback
+    function handleRandomNumber(
+        uint256 gameId,
+        uint256 randomNumber
+    ) internal override whenNotPaused {
+        BetInfo storage betInfo = gameIdToBetInfo[gameId];
+        uint256 balls = betInfo.balls;
+        bool degen = betInfo.degen;
+        uint256 betAmount = betInfo.betAmount;
+        address user = betInfo.user;
+
+        if (
+            betAmount == 0
+        ) {
+            // The game is ended
+            return;
+        }
+        // Set bet amount to zero to prevent re-entrancy
+        betInfo.betAmount = 0;
 
         uint256 totalRate = degen ? DEGEN_LENGTH : BASIC_LENGTH;
 
         // check result
         uint totalRewardAmount = 0;
-        for (uint256 i = 0; i < ball; i++) {
-            uint256 rand = getRandomUint(i);
+        uint256 betEachBall = betAmount / balls;
+        for (uint256 i = 0; i < balls; i++) {
+            uint256 rand = getRandomUint(randomNumber + i);
             uint256 randIndex = rand % totalRate;
 
             uint256 multiplier = degen
                 ? degenMultiplier[randIndex]
                 : basicMultiplier[randIndex];
-            uint rewardAmount = (multiplier * _betAmount) / 100;
+            uint rewardAmount = (multiplier * betEachBall) / 100;
             totalRewardAmount += rewardAmount;
-            emit Game(_betAmount, fee, sender, multiplier, rewardAmount);
+            emit Ball(gameId, multiplier);
         }
+        emit Game(user, gameId, betAmount, balls, totalRewardAmount);
 
         Leaderboard(leaderboard).earnReward(
             GAME_ID,
-            msg.sender,
+            user,
             totalRewardAmount,
-            _betAmount * ball
+            betAmount
         );
     }
 
@@ -119,4 +178,6 @@ contract Plinko is AccessControl, Pausable {
                 )
             );
     }
+
+    function _authorizeUpgrade(address) internal override onlyRole(ADMIN_ROLE) {}
 }

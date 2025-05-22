@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import { AccessControlUpgradeable } from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import { UUPSUpgradeable } from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract Leaderboard is AccessControl {
+contract Leaderboard is 
+    UUPSUpgradeable,
+    AccessControlUpgradeable {
     bytes32 private constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 private constant GAME_ROLE = keccak256("GAME_ROLE");
     bytes32 private constant WITHDRAWER = keccak256("WITHDRAWER");
@@ -13,6 +16,7 @@ contract Leaderboard is AccessControl {
     /// Storage
     //////////////
     mapping(address => uint256) public points;
+    mapping(address => uint256) public pendingReward;
     uint256 public betFee;
     uint256 public minBet;
     uint256 public maxBet;
@@ -31,23 +35,30 @@ contract Leaderboard is AccessControl {
     );
     event Withdraw(address user, uint256 amount);
     event Deposit(address user, uint256 amount);
+    event ClaimReward(address user, uint256 amount);
 
     //////////////
     /// Constructor
     //////////////
-    constructor() {
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(ADMIN_ROLE, msg.sender);
-        _grantRole(GAME_ROLE, msg.sender);
-        _grantRole(WITHDRAWER, msg.sender);
+    function initialize() public initializer {
+        __Context_init_unchained();
+        __AccessControl_init_unchained();
+        __UUPSUpgradeable_init();
+
+        address sender = _msgSender();
+
+        _grantRole(DEFAULT_ADMIN_ROLE, sender);
+        _grantRole(ADMIN_ROLE, sender);
+        _grantRole(GAME_ROLE, sender);
+        _grantRole(WITHDRAWER, sender);
 
         betFee = 350;
         minBet = 25 ether / 100_000; // 0.00025
         maxBet = 2 ether / 100; // 0.02
         govFee = 1 ether / 1_000_000; // 0.000001
 
-        feeReceiver = msg.sender;
-        govAddress = msg.sender;
+        feeReceiver = sender;
+        govAddress = sender;
     }
 
     function takeFee() public payable returns (uint256 betAmount, uint256 fee) {
@@ -113,7 +124,7 @@ contract Leaderboard is AccessControl {
         uint256 betAmount
     ) external onlyRole(GAME_ROLE) {
         if (earnAmount > 0) {
-            payable(user).transfer(earnAmount);
+            pendingReward[user] += earnAmount;
             if (earnAmount > betAmount) {
                 points[user] += (earnAmount - betAmount);
                 emit NewPoint(gameId, user, earnAmount, betAmount);
@@ -121,7 +132,18 @@ contract Leaderboard is AccessControl {
         }
     }
 
+    function claimReward() external {
+        uint256 earnAmount = pendingReward[_msgSender()];
+        require(earnAmount > 0, "no reward");
+        pendingReward[_msgSender()] = 0;
+        payable(_msgSender()).transfer(earnAmount);
+
+        emit ClaimReward(_msgSender(), earnAmount);
+    }
+
     function deposit() public payable {
         emit Deposit(msg.sender, msg.value);
     }
+
+    function _authorizeUpgrade(address) internal override onlyRole(ADMIN_ROLE) {}
 }
