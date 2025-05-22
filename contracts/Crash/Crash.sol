@@ -18,7 +18,7 @@ contract Crash is
     struct BetInfo {
         address user;
         uint256 betAmount;
-        uint256 cashOut;
+        uint256 multiplier;
     }
 
     // -----------
@@ -32,14 +32,13 @@ contract Crash is
     // -----------
     uint256 public totalGame;
     address public leaderboard;
-    BetInfo[] public bets;
+    mapping(uint256 => BetInfo) public gameIdToBetInfo;
 
     // -----------
     // Events
     // -----------
-    event NewGame(uint256 newGameId, uint256 maxCashOutToWin);
-    event NewBet(address indexed user, uint256 indexed gameId, uint256 betAmount, uint256 cashOut, uint256 fee);
-    event Game(address indexed user, uint256 indexed gameId, uint256 betAmount, uint256 cashOut, uint256 payout);
+    event NewBet(address indexed user, uint256 indexed gameId, uint256 betAmount, uint256 multiplier, uint256 fee);
+    event Game(address indexed user, uint256 indexed gameId, uint256 betAmount, uint256 multiplier, uint256 payout);
 
     function initialize(address leaderboard_, address switchboard_, bytes32 swQueue_) public initializer {
         __Context_init_unchained();
@@ -78,11 +77,11 @@ contract Crash is
         totalRate = (totalSum + 99) / 100; // Ceiling equivalent for total sum
     }
 
-    // cashOut = multiplier: 100 -> 10000 (x1 -> x100)
-    function bet(uint256 cashOut) external payable whenNotPaused {
+    // multiplier: 100 -> 10000 (x1 -> x100)
+    function crash(uint256 multiplier) external payable whenNotPaused {
         // Validate must divisable to 25
         require(
-            cashOut > 100 && cashOut < 10000 && cashOut % 25 == 0,
+            multiplier > 100 && multiplier < 10000 && multiplier % 25 == 0,
             "invalid cashOut"
         );
 
@@ -93,15 +92,18 @@ contract Crash is
         }();
         
         // push bet info
+        uint256 gameId = totalGame;
+        requestRandomNumber(gameId);
         BetInfo memory betInfo = BetInfo({
             user: sender,
             betAmount: _betAmount,
-            cashOut: cashOut
+            multiplier: multiplier
         });
-        bets.push(betInfo);
+        gameIdToBetInfo[gameId] = betInfo;
+        totalGame = gameId + 1;
 
         // New Bet
-        emit NewBet(sender, totalGame, _betAmount, cashOut, fee);
+        emit NewBet(sender, gameId, _betAmount, multiplier, fee);
     }
 
     // handle entropy callback
@@ -109,87 +111,47 @@ contract Crash is
         uint256 gameId,
         uint256 randomNumber
     ) internal override whenNotPaused {
+        BetInfo storage betInfo = gameIdToBetInfo[gameId];
+        uint256 multiplier = betInfo.multiplier;
+        uint256 betAmount = betInfo.betAmount;
+        address user = betInfo.user;
+
         if (
-            gameId != totalGame
+            betAmount == 0
         ) {
-            // This is not the game we are looking for
-            // Cannot use require because we ensure the callback cannot be failed
+            // The game is ended
             return;
         }
+        // Set bet amount to zero to prevent re-entrancy
+        betInfo.betAmount = 0;
+        
+        /// calculate rate
+        (uint256 winRate, uint256 totalRate) = _calculateBetArray(multiplier);
 
-        uint256 maxCashOutToWin = 100;
-        uint256 minCashOutToLose = 10000;
+        // check result
+        uint256 rand = randomNumber % totalRate;
 
-        for (uint256 i = 0; i < bets.length; i++) {
-            BetInfo storage betInfo = bets[i];
-            uint256 cashOut = betInfo.cashOut;
-            uint256 betAmount = betInfo.betAmount;
-            address user = betInfo.user;
+        bool isWin = rand < winRate;
 
-            uint256 _rewardAmount = (cashOut * betAmount) / 100;
-
-            // win
-            if (cashOut <= maxCashOutToWin) {
-                Leaderboard(leaderboard).earnReward(
-                    GAME_ID,
-                    user,
-                    _rewardAmount,
-                    betAmount
-                );
-                emit Game(user, gameId, betAmount, cashOut, _rewardAmount);
-                continue;
-            }
-
-            // lose
-            if (cashOut >= minCashOutToLose) {
-                emit Game(user, gameId, betAmount, cashOut, 0);
-                continue;
-            }  
-
-            /// calculate rate
-            (uint256 winRate, uint256 totalRate) = _calculateBetArray(cashOut);
-
-            // check result
-            uint256 rand = randomNumber % totalRate;
-
-            bool isWin = rand < winRate;
-
-            // check if win
-            if (!isWin) {
-                _rewardAmount = 0;
-                // all cashout bigger than this will be lost
-                minCashOutToLose = cashOut;
-            } else {
-                // all cashout lower than this will be win
-                maxCashOutToWin = cashOut;
-            }
-
-            Leaderboard(leaderboard).earnReward(
-                GAME_ID,
-                user,
-                _rewardAmount,
-                betAmount
-            );
-            emit Game(user, gameId, betAmount, cashOut, _rewardAmount);
+        // check if win
+        uint256 _rewardAmount = betAmount * multiplier;
+        if (!isWin) {
+            _rewardAmount = 0;
         }
 
-        totalGame = totalGame + 1;
-        delete bets;
+        Leaderboard(leaderboard).earnReward(
+            GAME_ID,
+            user,
+            _rewardAmount,
+            betAmount
+        );
+        emit Game(user, gameId, betAmount, multiplier, _rewardAmount);
 
-        emit NewGame(totalGame, maxCashOutToWin);
+
     }
 
     function setLeaderboard(address leaderboard_) public onlyRole(ADMIN_ROLE) {
         leaderboard = leaderboard_;
-    }
-
-    function launch() external payable whenNotPaused {
-        if (bets.length > 0) {
-            requestRandomNumber(totalGame);
-        } else {
-            totalGame = totalGame + 1;
-            emit NewGame(totalGame, 100);
-        }
     }
 
     /**

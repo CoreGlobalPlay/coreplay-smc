@@ -96,7 +96,7 @@ contract Mines is UUPSUpgradeable,
             level: level,
             betAmount: _betAmount
         });
-        gameIdToBetInfo[totalGame] = betInfo;
+        gameIdToBetInfo[gameId] = betInfo;
 
         totalGame = gameId + 1;
 

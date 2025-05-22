@@ -96,7 +96,7 @@ contract Plinko is UUPSUpgradeable,
             balls: balls,
             betAmount: _betAmount
         });
-        gameIdToBetInfo[totalGame] = betInfo;
+        gameIdToBetInfo[gameId] = betInfo;
 
         totalGame = gameId + 1;
 

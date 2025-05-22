@@ -68,7 +68,7 @@ contract CoinFlip is
             side: side,
             betAmount: _betAmount
         });
-        gameIdToBetInfo[totalGame] = betInfo;
+        gameIdToBetInfo[gameId] = betInfo;
 
         totalGame = gameId + 1;
 
