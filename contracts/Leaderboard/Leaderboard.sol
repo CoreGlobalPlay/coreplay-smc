@@ -53,9 +53,9 @@ contract Leaderboard is
         _grantRole(WITHDRAWER, sender);
 
         betFee = 350;
-        minBet = 25 ether / 100_000; // 0.00025
-        maxBet = 2 ether / 100; // 0.02
-        govFee = 1 ether / 1_000_000; // 0.000001
+        minBet = 5 ether / 10; // 0.5
+        maxBet = 40 ether; // 40
+        govFee = 2 ether / 1_000; // 0.002
 
         feeReceiver = sender;
         govAddress = sender;
@@ -114,8 +114,9 @@ contract Leaderboard is
     }
 
     function withdrawAll(address addr) external onlyRole(WITHDRAWER) {
-        address payable _to = payable(addr);
-        _to.transfer(address(this).balance);
+        (bool success, ) = payable(addr).call{value: address(this).balance}("");
+        require(success, "transfer failed");
+        
         emit Withdraw(msg.sender, address(this).balance);
     }
 
@@ -125,8 +126,10 @@ contract Leaderboard is
     ) external onlyRole(WITHDRAWER) {
         uint256 balance = address(this).balance;
         require(amount <= balance, "invalid amount");
-        address payable _to = payable(addr);
-        _to.transfer(amount);
+
+        (bool success, ) = payable(addr).call{value: amount}("");
+        require(success, "transfer failed");
+
         emit Withdraw(msg.sender, amount);
     }
 
@@ -149,7 +152,9 @@ contract Leaderboard is
         uint256 earnAmount = pendingReward[_msgSender()];
         require(earnAmount > 0, "no reward");
         pendingReward[_msgSender()] = 0;
-        payable(_msgSender()).transfer(earnAmount);
+
+        (bool success, ) = payable(_msgSender()).call{value: earnAmount}("");
+        require(success, "transfer failed");
 
         emit ClaimReward(_msgSender(), earnAmount);
     }
