@@ -89,7 +89,6 @@ contract Mines is UUPSUpgradeable,
         }();
 
         uint256 gameId = totalGame + 1;
-        requestRandomNumber(gameId);
         BetInfo memory betInfo = BetInfo({
             user: sender,
             mines: mines,
@@ -99,6 +98,7 @@ contract Mines is UUPSUpgradeable,
         gameIdToBetInfo[gameId] = betInfo;
 
         totalGame = gameId ;
+        requestRandomNumber(gameId);
 
         // New Bet
         emit NewBet(sender, gameId, _betAmount, mines, level, fee);

@@ -4,16 +4,23 @@ pragma solidity ^0.8.22;
 import {Structs} from "@switchboard-xyz/on-demand-solidity/structs/Structs.sol";
 import {ISwitchboard} from "@switchboard-xyz/on-demand-solidity/ISwitchboard.sol";
 import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import { AccessControlUpgradeable } from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
-abstract contract SwResolver is Initializable {
+abstract contract SwResolver is Initializable, AccessControlUpgradeable {
+    // Contants
+    bytes32 private constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+
+    // Storages
     address private _switchboard;
     bytes32 public queue;
     uint256 public sequence;
     uint256 public solvedSeq;
     mapping(uint256 => uint256) public seq2GameId;
+    bool public vrfEnable;
 
+    // Events
     event RandomRequested(uint256 sequence);
-    
+
     // https://docs.switchboard.xyz/product-documentation/randomness/tutorials/evm
     function setupResolver(address switchboard_, bytes32 swQueue_) internal initializer {
         queue = swQueue_;
@@ -21,6 +28,12 @@ abstract contract SwResolver is Initializable {
     }
 
     function requestRandomNumber(uint256 gameId) internal {
+        if (!vrfEnable) {
+            handleRandomNumber(gameId, uint256(
+                keccak256(abi.encodePacked(block.number, gameId, msg.sender))
+            ));
+            return;
+        }
         require(seq2GameId[gameId] == 0, "Game exists");
 
         sequence += 1;
@@ -59,4 +72,8 @@ abstract contract SwResolver is Initializable {
         uint256 gameId,
         uint256 randomNumber
     ) internal virtual;
+
+    function setVrf(bool enabled) external onlyRole(ADMIN_ROLE) {
+        vrfEnable = enabled;
+    }
 }

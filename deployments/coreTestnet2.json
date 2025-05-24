@@ -3,7 +3,7 @@
   "chainId": "1114",
   "contracts": {
     "CoinFlip": {
-      "address": "0x95A994ebF0ef1f91946a14FC1e41f6312a819DAA",
+      "address": "0xf3F2c260b836a3af28468C530cB29A25D631D66a",
       "abi": [
         {
           "anonymous": false,
@@ -672,6 +672,19 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "setVrf",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "solvedSeq",
           "outputs": [
@@ -742,6 +755,19 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "vrfEnable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "address",
@@ -760,7 +786,7 @@
       ]
     },
     "CoinFlip_Implementation": {
-      "address": "0x7734f635Ae714c3933BD1AaFEffd46d4BF7F2e68",
+      "address": "0x8A4FEC9e4F192E4e9EF902f56A4a8aFDEdde99ad",
       "abi": [
         {
           "inputs": [],
@@ -1389,6 +1415,19 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "setVrf",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "solvedSeq",
           "outputs": [
@@ -1459,13 +1498,26 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "vrfEnable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "stateMutability": "payable",
           "type": "receive"
         }
       ]
     },
     "CoinFlip_Proxy": {
-      "address": "0x95A994ebF0ef1f91946a14FC1e41f6312a819DAA",
+      "address": "0xf3F2c260b836a3af28468C530cB29A25D631D66a",
       "abi": [
         {
           "inputs": [
@@ -1539,7 +1591,7 @@
       ]
     },
     "Crash": {
-      "address": "0x252ea66CD0F314A5C4925CB9389f26361218060d",
+      "address": "0x48b3AaeaB5c82f1177b5faBfe374B71f332EBF5F",
       "abi": [
         {
           "anonymous": false,
@@ -2232,6 +2284,19 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "setVrf",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "solvedSeq",
           "outputs": [
@@ -2302,6 +2367,19 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "vrfEnable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "address",
@@ -2320,7 +2398,7 @@
       ]
     },
     "Crash_Implementation": {
-      "address": "0x0a6741efdddDC7F6c3ecFFe822F7a47F53D7C21E",
+      "address": "0x52D2e8F06D5B18Dd439Ee330bA332aF0d47C8126",
       "abi": [
         {
           "inputs": [],
@@ -2973,6 +3051,19 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "setVrf",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "solvedSeq",
           "outputs": [
@@ -3043,13 +3134,26 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "vrfEnable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "stateMutability": "payable",
           "type": "receive"
         }
       ]
     },
     "Crash_Proxy": {
-      "address": "0x252ea66CD0F314A5C4925CB9389f26361218060d",
+      "address": "0x48b3AaeaB5c82f1177b5faBfe374B71f332EBF5F",
       "abi": [
         {
           "inputs": [
@@ -3123,7 +3227,7 @@
       ]
     },
     "Leaderboard": {
-      "address": "0x420766a2455d6043b7Cb4586aD1c149Da30BD672",
+      "address": "0xb7A2Da52f84849D412218Ccc8Fbcfa33A2056467",
       "abi": [
         {
           "anonymous": false,
@@ -3941,7 +4045,7 @@
       ]
     },
     "Leaderboard_Implementation": {
-      "address": "0x651E8583F7F6945F5f25150803Ca9Ce9d0cd5793",
+      "address": "0x35bbC664116f08eFB556E2F42F0a68aE6Bd817E6",
       "abi": [
         {
           "inputs": [],
@@ -4703,7 +4807,7 @@
       ]
     },
     "Leaderboard_Proxy": {
-      "address": "0x420766a2455d6043b7Cb4586aD1c149Da30BD672",
+      "address": "0xb7A2Da52f84849D412218Ccc8Fbcfa33A2056467",
       "abi": [
         {
           "inputs": [
@@ -4777,7 +4881,7 @@
       ]
     },
     "Mines": {
-      "address": "0xe4aA52BCDcdFFB7C52Dc651adCBAcb9EFD3A2A50",
+      "address": "0x54Fb136B94632E6EC2b00ec61459C480A0F9448D",
       "abi": [
         {
           "anonymous": false,
@@ -5515,6 +5619,19 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "setVrf",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "solvedSeq",
           "outputs": [
@@ -5585,6 +5702,19 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "vrfEnable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "address",
@@ -5603,7 +5733,7 @@
       ]
     },
     "Mines_Implementation": {
-      "address": "0xe23d994a53005Ce14B90654D4DF9175dcB2387E9",
+      "address": "0x3aC049e35aC5178Ca1522f3C807750D03Bd8275E",
       "abi": [
         {
           "inputs": [],
@@ -6301,6 +6431,19 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "setVrf",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "solvedSeq",
           "outputs": [
@@ -6371,13 +6514,26 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "vrfEnable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "stateMutability": "payable",
           "type": "receive"
         }
       ]
     },
     "Mines_Proxy": {
-      "address": "0xe4aA52BCDcdFFB7C52Dc651adCBAcb9EFD3A2A50",
+      "address": "0x54Fb136B94632E6EC2b00ec61459C480A0F9448D",
       "abi": [
         {
           "inputs": [
@@ -6451,7 +6607,7 @@
       ]
     },
     "Plinko": {
-      "address": "0x655dA788B57b346a62446298C64Bb1a0c0c50ef3",
+      "address": "0xEd429203B341C3ac7b591B74652bb9F294232643",
       "abi": [
         {
           "anonymous": false,
@@ -7187,6 +7343,19 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "setVrf",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "solvedSeq",
           "outputs": [
@@ -7257,6 +7426,19 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "vrfEnable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "address",
@@ -7275,7 +7457,7 @@
       ]
     },
     "Plinko_Implementation": {
-      "address": "0x216c6350a2bB1d09f76D8Bc59adAc309F2f34701",
+      "address": "0xEBFE3444C19a5ab27b659A52849E4c8B2Fa23cBe",
       "abi": [
         {
           "inputs": [],
@@ -7971,6 +8153,19 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "setVrf",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "solvedSeq",
           "outputs": [
@@ -8041,13 +8236,26 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "vrfEnable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "stateMutability": "payable",
           "type": "receive"
         }
       ]
     },
     "Plinko_Proxy": {
-      "address": "0x655dA788B57b346a62446298C64Bb1a0c0c50ef3",
+      "address": "0xEd429203B341C3ac7b591B74652bb9F294232643",
       "abi": [
         {
           "inputs": [
