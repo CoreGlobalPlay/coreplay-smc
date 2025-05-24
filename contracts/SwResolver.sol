@@ -39,24 +39,20 @@ abstract contract SwResolver is Initializable {
 
     function resolve(
         bytes[] calldata switchboardUpdateFeeds,
-        uint256 targetSeq
+        uint256 seq
     ) external {
-        uint256 tagetGameId = seq2GameId[targetSeq];
+        uint256 gameId = seq2GameId[seq];
 
-        require(targetSeq > solvedSeq && tagetGameId != 0, "invalid seq");
-        uint256 fromSeq = solvedSeq;
-        solvedSeq = targetSeq;
+        require(seq == solvedSeq + 1 && gameId != 0, "invalid seq");
+        solvedSeq = seq;
 
         // invoke
         ISwitchboard(_switchboard).updateFeeds(switchboardUpdateFeeds);
 
-        for (uint256 _seq = fromSeq + 1; _seq <= targetSeq; _seq++) {
-            Structs.RandomnessResult memory randomness = ISwitchboard(_switchboard).getRandomness(bytes32(_seq)).result;
-            require(randomness.settledAt != 0, "Randomness failed to Settle");
+        Structs.RandomnessResult memory randomness = ISwitchboard(_switchboard).getRandomness(bytes32(solvedSeq)).result;
+        require(randomness.settledAt != 0, "Randomness failed to Settle");
 
-            uint256 gameId = seq2GameId[_seq];
-            handleRandomNumber(gameId, randomness.value);
-        }
+        handleRandomNumber(gameId, randomness.value);
     }
 
     function handleRandomNumber(

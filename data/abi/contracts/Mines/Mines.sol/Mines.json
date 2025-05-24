@@ -622,7 +622,7 @@
             },
             {
                 "internalType": "uint256",
-                "name": "targetSeq",
+                "name": "seq",
                 "type": "uint256"
             }
         ],

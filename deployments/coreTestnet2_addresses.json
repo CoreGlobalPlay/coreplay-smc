@@ -1,0 +1,21 @@
+{
+  "name": "coreTestnet2",
+  "chainId": "1114",
+  "addresses": {
+    "CoinFlip": "0x95A994ebF0ef1f91946a14FC1e41f6312a819DAA",
+    "CoinFlip_Implementation": "0x7734f635Ae714c3933BD1AaFEffd46d4BF7F2e68",
+    "CoinFlip_Proxy": "0x95A994ebF0ef1f91946a14FC1e41f6312a819DAA",
+    "Crash": "0x252ea66CD0F314A5C4925CB9389f26361218060d",
+    "Crash_Implementation": "0x0a6741efdddDC7F6c3ecFFe822F7a47F53D7C21E",
+    "Crash_Proxy": "0x252ea66CD0F314A5C4925CB9389f26361218060d",
+    "Leaderboard": "0x420766a2455d6043b7Cb4586aD1c149Da30BD672",
+    "Leaderboard_Implementation": "0x651E8583F7F6945F5f25150803Ca9Ce9d0cd5793",
+    "Leaderboard_Proxy": "0x420766a2455d6043b7Cb4586aD1c149Da30BD672",
+    "Mines": "0xe4aA52BCDcdFFB7C52Dc651adCBAcb9EFD3A2A50",
+    "Mines_Implementation": "0xe23d994a53005Ce14B90654D4DF9175dcB2387E9",
+    "Mines_Proxy": "0xe4aA52BCDcdFFB7C52Dc651adCBAcb9EFD3A2A50",
+    "Plinko": "0x655dA788B57b346a62446298C64Bb1a0c0c50ef3",
+    "Plinko_Implementation": "0x216c6350a2bB1d09f76D8Bc59adAc309F2f34701",
+    "Plinko_Proxy": "0x655dA788B57b346a62446298C64Bb1a0c0c50ef3"
+  }
+}

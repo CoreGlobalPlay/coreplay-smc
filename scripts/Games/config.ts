@@ -23,6 +23,7 @@ const hardhatScriptConfig: Config = {
 const configs: Record<string, Config> = {
   hardhat: hardhatScriptConfig,
   "coreTestnet": testnetScriptConfig,
+  "coreTestnet2": testnetScriptConfig,
   "coreMainnet": mainnetScriptConfig,
 };
 

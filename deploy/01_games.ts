@@ -48,8 +48,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
             args: [leaderboard.address, ScriptConfig.SwAddress, ScriptConfig.swQueue],
           },
           onUpgrade: {
-            methodName: "gameIdToRandomnessId",
-            args: [0]
+            methodName: "sequence",
+            args: []
           }
         },
       },

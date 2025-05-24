@@ -27,6 +27,11 @@ const config: HardhatUserConfig = {
       chainId: 1115,
       accounts: [testnetPrivateKey!],
     },
+    coreTestnet2: {
+      url: "https://rpc.test2.btcs.network",
+      chainId: 1114,
+      accounts: [testnetPrivateKey!],
+    },
     coreMainnet: {
       url: "https://rpc.coredao.org",
       chainId: 1116,
