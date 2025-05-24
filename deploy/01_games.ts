@@ -22,6 +22,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
           methodName: "initialize",
           args: [],
         },
+        onUpgrade: {
+          methodName: "betFee",
+          args: []
+        }
       },
     },
     contract: "Leaderboard",

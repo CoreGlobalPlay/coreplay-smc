@@ -686,6 +686,30 @@
     {
         "inputs": [
             {
+                "internalType": "uint256",
+                "name": "attempts",
+                "type": "uint256"
+            }
+        ],
+        "name": "takeFeeWithAttemp",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "betAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "fee",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "address",
                 "name": "newImplementation",
                 "type": "address"

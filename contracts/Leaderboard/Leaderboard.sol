@@ -74,6 +74,19 @@ contract Leaderboard is
         payable(feeReceiver).transfer(fee);
     }
 
+    function takeFeeWithAttemp(uint256 attempts) public payable returns (uint256 betAmount, uint256 fee) {
+        uint256 _betAmountBeforeFee = msg.value - govFee;
+        betAmount =
+            (_betAmountBeforeFee * FEE_DENOMINATOR) /
+            (FEE_DENOMINATOR + betFee);
+        require(betAmount >= minBet*attempts && betAmount <= maxBet*attempts, "invalid bet");
+
+        fee = _betAmountBeforeFee - betAmount;
+
+        payable(govAddress).transfer(govFee);
+        payable(feeReceiver).transfer(fee);
+    }
+
     function setBetFee(uint256 val) public onlyRole(ADMIN_ROLE) {
         betFee = val;
     }

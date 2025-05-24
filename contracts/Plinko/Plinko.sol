@@ -84,9 +84,9 @@ contract Plinko is UUPSUpgradeable,
 
         address sender = _msgSender();
         // take fee
-        (uint256 _betAmount, uint256 fee) = Leaderboard(leaderboard).takeFee{
+        (uint256 _betAmount, uint256 fee) = Leaderboard(leaderboard).takeFeeWithAttemp{
             value: msg.value
-        }();
+        }(balls);
 
         uint256 gameId = totalGame;
         requestRandomNumber(gameId);
