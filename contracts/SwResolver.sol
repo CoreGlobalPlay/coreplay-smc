@@ -8,10 +8,11 @@ import { Initializable } from "@openzeppelin/contracts-upgradeable/proxy/utils/I
 abstract contract SwResolver is Initializable {
     address private _switchboard;
     bytes32 public queue;
-    mapping(bytes32 => uint256) public randomnessIdToGameId;
-    mapping(uint256 => bytes32) public gameIdToRandomnessId;
+    uint256 public sequence;
+    uint256 public solvedSeq;
+    mapping(uint256 => uint256) public seq2GameId;
 
-    event RandomRequested(bytes32 randomnessId);
+    event RandomRequested(uint256 sequence);
     
     // https://docs.switchboard.xyz/product-documentation/randomness/tutorials/evm
     function setupResolver(address switchboard_, bytes32 swQueue_) internal initializer {
@@ -20,36 +21,42 @@ abstract contract SwResolver is Initializable {
     }
 
     function requestRandomNumber(uint256 gameId) internal {
-        require(gameIdToRandomnessId[gameId] == 0, "Game exists");
+        require(seq2GameId[gameId] == 0, "Game exists");
 
-        bytes32 randomnessId = keccak256(abi.encodePacked(gameId, msg.sender, block.timestamp));
-
+        sequence += 1;
         ISwitchboard(_switchboard).requestRandomness(
-            randomnessId,            // randomnessId (bytes32): Unique ID for the request.
+            bytes32(sequence),        // randomnessId (bytes32): Unique ID for the request.
             address(this),            // authority (address):  Only this contract should manage randomness. 
             queue,                    // queueId (bytes32 ): Chain selection for requesting randomness.
             1                         // minSettlementDelay (uint16): Minimum seconds to settle the request.
         );
 
-        // Store the randomnessId number to identify the callback request
-        randomnessIdToGameId[randomnessId] = gameId;
-        gameIdToRandomnessId[gameId] = randomnessId;
+        // Store the number to identify the callback request
+        seq2GameId[sequence] = gameId;
 
-        emit RandomRequested(randomnessId);
+        emit RandomRequested(sequence);
     }
 
     function resolve(
         bytes[] calldata switchboardUpdateFeeds,
-        bytes32 randomnessId
+        uint256 targetSeq
     ) external {
+        uint256 tagetGameId = seq2GameId[targetSeq];
+
+        require(targetSeq > solvedSeq && tagetGameId != 0, "invalid seq");
+        uint256 fromSeq = solvedSeq;
+        solvedSeq = targetSeq;
+
         // invoke
         ISwitchboard(_switchboard).updateFeeds(switchboardUpdateFeeds);
 
-        // store value for later use
-        Structs.RandomnessResult memory randomness = ISwitchboard(_switchboard).getRandomness(randomnessId).result;
-        require(randomness.settledAt != 0, "Randomness failed to Settle");
+        for (uint256 _seq = fromSeq + 1; _seq <= targetSeq; _seq++) {
+            Structs.RandomnessResult memory randomness = ISwitchboard(_switchboard).getRandomness(bytes32(_seq)).result;
+            require(randomness.settledAt != 0, "Randomness failed to Settle");
 
-        handleRandomNumber(randomnessIdToGameId[randomnessId], randomness.value);
+            uint256 gameId = seq2GameId[_seq];
+            handleRandomNumber(gameId, randomness.value);
+        }
     }
 
     function handleRandomNumber(

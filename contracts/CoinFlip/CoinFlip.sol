@@ -61,7 +61,7 @@ contract CoinFlip is
             value: msg.value
         }();
 
-        uint256 gameId = totalGame;
+        uint256 gameId = totalGame + 1;
         requestRandomNumber(gameId);
         BetInfo memory betInfo = BetInfo({
             user: sender,
@@ -70,7 +70,7 @@ contract CoinFlip is
         });
         gameIdToBetInfo[gameId] = betInfo;
 
-        totalGame = gameId + 1;
+        totalGame = gameId;
 
         // New Bet
         emit NewBet(sender, gameId, _betAmount, side, fee);

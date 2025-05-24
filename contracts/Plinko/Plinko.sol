@@ -88,7 +88,7 @@ contract Plinko is UUPSUpgradeable,
             value: msg.value
         }(balls);
 
-        uint256 gameId = totalGame;
+        uint256 gameId = totalGame + 1;
         requestRandomNumber(gameId);
         BetInfo memory betInfo = BetInfo({
             user: sender,
@@ -98,7 +98,7 @@ contract Plinko is UUPSUpgradeable,
         });
         gameIdToBetInfo[gameId] = betInfo;
 
-        totalGame = gameId + 1;
+        totalGame = gameId;
 
         // New Bet
         emit NewBet(sender, gameId, _betAmount, balls, fee);

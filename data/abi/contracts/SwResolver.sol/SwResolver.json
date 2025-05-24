@@ -27,32 +27,13 @@
         "inputs": [
             {
                 "indexed": false,
-                "internalType": "bytes32",
-                "name": "randomnessId",
-                "type": "bytes32"
+                "internalType": "uint256",
+                "name": "sequence",
+                "type": "uint256"
             }
         ],
         "name": "RandomRequested",
         "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "gameIdToRandomnessId",
-        "outputs": [
-            {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
     },
     {
         "inputs": [],
@@ -70,12 +51,30 @@
     {
         "inputs": [
             {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
+                "internalType": "bytes[]",
+                "name": "switchboardUpdateFeeds",
+                "type": "bytes[]"
+            },
+            {
+                "internalType": "uint256",
+                "name": "targetSeq",
+                "type": "uint256"
             }
         ],
-        "name": "randomnessIdToGameId",
+        "name": "resolve",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "seq2GameId",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -87,21 +86,29 @@
         "type": "function"
     },
     {
-        "inputs": [
+        "inputs": [],
+        "name": "sequence",
+        "outputs": [
             {
-                "internalType": "bytes[]",
-                "name": "switchboardUpdateFeeds",
-                "type": "bytes[]"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "randomnessId",
-                "type": "bytes32"
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }
         ],
-        "name": "resolve",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "solvedSeq",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     }
 ]

@@ -3,7 +3,7 @@
   "chainId": "1115",
   "contracts": {
     "CoinFlip": {
-      "address": "0x283D76a4060d133592e8B064C88Ae1Bd1d477789",
+      "address": "0x4e907Bf3708d148100649644D0087e75E2cDf483",
       "abi": [
         {
           "anonymous": false,
@@ -252,9 +252,9 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "sequence",
+              "type": "uint256"
             }
           ],
           "name": "RandomRequested",
@@ -432,25 +432,6 @@
         {
           "inputs": [
             {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "gameIdToRandomnessId",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
               "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
@@ -595,25 +576,6 @@
           "inputs": [
             {
               "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "name": "randomnessIdToGameId",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
             },
@@ -636,9 +598,9 @@
               "type": "bytes[]"
             },
             {
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "targetSeq",
+              "type": "uint256"
             }
           ],
           "name": "resolve",
@@ -667,6 +629,38 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "seq2GameId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sequence",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "leaderboard_",
               "type": "address"
@@ -675,6 +669,19 @@
           "name": "setLeaderboard",
           "outputs": [],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "solvedSeq",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -753,7 +760,7 @@
       ]
     },
     "CoinFlip_Implementation": {
-      "address": "0x252ea66CD0F314A5C4925CB9389f26361218060d",
+      "address": "0x749968aEeA58e4C7c8940B48D002B82E8Eb3AD19",
       "abi": [
         {
           "inputs": [],
@@ -949,9 +956,9 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "sequence",
+              "type": "uint256"
             }
           ],
           "name": "RandomRequested",
@@ -1142,25 +1149,6 @@
         {
           "inputs": [
             {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "gameIdToRandomnessId",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
               "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
@@ -1305,25 +1293,6 @@
           "inputs": [
             {
               "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "name": "randomnessIdToGameId",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
             },
@@ -1346,9 +1315,9 @@
               "type": "bytes[]"
             },
             {
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "targetSeq",
+              "type": "uint256"
             }
           ],
           "name": "resolve",
@@ -1377,6 +1346,38 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "seq2GameId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sequence",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "leaderboard_",
               "type": "address"
@@ -1385,6 +1386,19 @@
           "name": "setLeaderboard",
           "outputs": [],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "solvedSeq",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -1451,7 +1465,7 @@
       ]
     },
     "CoinFlip_Proxy": {
-      "address": "0x283D76a4060d133592e8B064C88Ae1Bd1d477789",
+      "address": "0x4e907Bf3708d148100649644D0087e75E2cDf483",
       "abi": [
         {
           "inputs": [
@@ -1525,7 +1539,7 @@
       ]
     },
     "Crash": {
-      "address": "0xb23472F23968122BA0165Ac3F1d19eb499CBDe5F",
+      "address": "0xc6AbcC0593c8358d63b078801393c2604ff25402",
       "abi": [
         {
           "anonymous": false,
@@ -1774,9 +1788,9 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "sequence",
+              "type": "uint256"
             }
           ],
           "name": "RandomRequested",
@@ -1978,25 +1992,6 @@
         {
           "inputs": [
             {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "gameIdToRandomnessId",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
               "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
@@ -2141,25 +2136,6 @@
           "inputs": [
             {
               "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "name": "randomnessIdToGameId",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
             },
@@ -2182,9 +2158,9 @@
               "type": "bytes[]"
             },
             {
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "targetSeq",
+              "type": "uint256"
             }
           ],
           "name": "resolve",
@@ -2213,6 +2189,38 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "seq2GameId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sequence",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "leaderboard_",
               "type": "address"
@@ -2221,6 +2229,19 @@
           "name": "setLeaderboard",
           "outputs": [],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "solvedSeq",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -2299,7 +2320,7 @@
       ]
     },
     "Crash_Implementation": {
-      "address": "0xe4aA52BCDcdFFB7C52Dc651adCBAcb9EFD3A2A50",
+      "address": "0x529FaDA6211e63efc487Ec0B53166D6760967A55",
       "abi": [
         {
           "inputs": [],
@@ -2495,9 +2516,9 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "sequence",
+              "type": "uint256"
             }
           ],
           "name": "RandomRequested",
@@ -2712,25 +2733,6 @@
         {
           "inputs": [
             {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "gameIdToRandomnessId",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
               "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
@@ -2875,25 +2877,6 @@
           "inputs": [
             {
               "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "name": "randomnessIdToGameId",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
             },
@@ -2916,9 +2899,9 @@
               "type": "bytes[]"
             },
             {
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "targetSeq",
+              "type": "uint256"
             }
           ],
           "name": "resolve",
@@ -2947,6 +2930,38 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "seq2GameId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sequence",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "leaderboard_",
               "type": "address"
@@ -2955,6 +2970,19 @@
           "name": "setLeaderboard",
           "outputs": [],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "solvedSeq",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -3021,7 +3049,7 @@
       ]
     },
     "Crash_Proxy": {
-      "address": "0xb23472F23968122BA0165Ac3F1d19eb499CBDe5F",
+      "address": "0xc6AbcC0593c8358d63b078801393c2604ff25402",
       "abi": [
         {
           "inputs": [
@@ -3095,7 +3123,7 @@
       ]
     },
     "Leaderboard": {
-      "address": "0x30b7eDba4CD4EC31C388BbB25A2483C60E12d9a1",
+      "address": "0x1921edf14eDD4c8a53615E32d98fa54a41618590",
       "abi": [
         {
           "anonymous": false,
@@ -3806,6 +3834,30 @@
         {
           "inputs": [],
           "name": "takeFee",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "betAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "attempts",
+              "type": "uint256"
+            }
+          ],
+          "name": "takeFeeWithAttemp",
           "outputs": [
             {
               "internalType": "uint256",
@@ -3889,7 +3941,7 @@
       ]
     },
     "Leaderboard_Implementation": {
-      "address": "0xEA2FbC7A0E4156d74CF75CE1673a30080feE0852",
+      "address": "0xbFDab4A869E5871d7FFADDF3e4e6543E24552fD6",
       "abi": [
         {
           "inputs": [],
@@ -4578,6 +4630,30 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "attempts",
+              "type": "uint256"
+            }
+          ],
+          "name": "takeFeeWithAttemp",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "betAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "newImplementation",
               "type": "address"
@@ -4627,7 +4703,7 @@
       ]
     },
     "Leaderboard_Proxy": {
-      "address": "0x30b7eDba4CD4EC31C388BbB25A2483C60E12d9a1",
+      "address": "0x1921edf14eDD4c8a53615E32d98fa54a41618590",
       "abi": [
         {
           "inputs": [
@@ -4701,7 +4777,7 @@
       ]
     },
     "Mines": {
-      "address": "0x7dc4335133DD00a67d2A75D8dC837EdB44ACE763",
+      "address": "0x11EE7F3cBBc42d6f980Da8B80FEAc16B2E090d71",
       "abi": [
         {
           "anonymous": false,
@@ -4962,9 +5038,9 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "sequence",
+              "type": "uint256"
             }
           ],
           "name": "RandomRequested",
@@ -5199,25 +5275,6 @@
         {
           "inputs": [
             {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "gameIdToRandomnessId",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
               "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
@@ -5362,25 +5419,6 @@
           "inputs": [
             {
               "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "name": "randomnessIdToGameId",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
             },
@@ -5403,9 +5441,9 @@
               "type": "bytes[]"
             },
             {
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "targetSeq",
+              "type": "uint256"
             }
           ],
           "name": "resolve",
@@ -5434,6 +5472,38 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "seq2GameId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sequence",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "leaderboard_",
               "type": "address"
@@ -5442,6 +5512,19 @@
           "name": "setLeaderboard",
           "outputs": [],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "solvedSeq",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -5520,7 +5603,7 @@
       ]
     },
     "Mines_Implementation": {
-      "address": "0x655dA788B57b346a62446298C64Bb1a0c0c50ef3",
+      "address": "0x50602Db95653856afDD9FaBcA0eAbAa4ABaE4b2c",
       "abi": [
         {
           "inputs": [],
@@ -5728,9 +5811,9 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "sequence",
+              "type": "uint256"
             }
           ],
           "name": "RandomRequested",
@@ -5978,25 +6061,6 @@
         {
           "inputs": [
             {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "gameIdToRandomnessId",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
               "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
@@ -6141,25 +6205,6 @@
           "inputs": [
             {
               "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "name": "randomnessIdToGameId",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
             },
@@ -6182,9 +6227,9 @@
               "type": "bytes[]"
             },
             {
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "targetSeq",
+              "type": "uint256"
             }
           ],
           "name": "resolve",
@@ -6213,6 +6258,38 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "seq2GameId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sequence",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "leaderboard_",
               "type": "address"
@@ -6221,6 +6298,19 @@
           "name": "setLeaderboard",
           "outputs": [],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "solvedSeq",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -6287,7 +6377,7 @@
       ]
     },
     "Mines_Proxy": {
-      "address": "0x7dc4335133DD00a67d2A75D8dC837EdB44ACE763",
+      "address": "0x11EE7F3cBBc42d6f980Da8B80FEAc16B2E090d71",
       "abi": [
         {
           "inputs": [
@@ -6361,7 +6451,7 @@
       ]
     },
     "Plinko": {
-      "address": "0xA33f2be3A194B342D03E2E876351010e42E0BB39",
+      "address": "0x113C11EF97Bc6D004D776377Ad7a533235AcF88C",
       "abi": [
         {
           "anonymous": false,
@@ -6629,9 +6719,9 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "sequence",
+              "type": "uint256"
             }
           ],
           "name": "RandomRequested",
@@ -6839,25 +6929,6 @@
         {
           "inputs": [
             {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "gameIdToRandomnessId",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
               "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
@@ -7020,25 +7091,6 @@
           "inputs": [
             {
               "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "name": "randomnessIdToGameId",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
             },
@@ -7061,9 +7113,9 @@
               "type": "bytes[]"
             },
             {
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "targetSeq",
+              "type": "uint256"
             }
           ],
           "name": "resolve",
@@ -7092,6 +7144,38 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "seq2GameId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sequence",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "leaderboard_",
               "type": "address"
@@ -7100,6 +7184,19 @@
           "name": "setLeaderboard",
           "outputs": [],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "solvedSeq",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -7178,7 +7275,7 @@
       ]
     },
     "Plinko_Implementation": {
-      "address": "0x7734f635Ae714c3933BD1AaFEffd46d4BF7F2e68",
+      "address": "0x06b00DD3BCEdAc31D68f37483f7623De56da7700",
       "abi": [
         {
           "inputs": [],
@@ -7393,9 +7490,9 @@
           "inputs": [
             {
               "indexed": false,
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "sequence",
+              "type": "uint256"
             }
           ],
           "name": "RandomRequested",
@@ -7616,25 +7713,6 @@
         {
           "inputs": [
             {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "gameIdToRandomnessId",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
               "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
@@ -7797,25 +7875,6 @@
           "inputs": [
             {
               "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "name": "randomnessIdToGameId",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
               "name": "role",
               "type": "bytes32"
             },
@@ -7838,9 +7897,9 @@
               "type": "bytes[]"
             },
             {
-              "internalType": "bytes32",
-              "name": "randomnessId",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "targetSeq",
+              "type": "uint256"
             }
           ],
           "name": "resolve",
@@ -7869,6 +7928,38 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "seq2GameId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sequence",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "leaderboard_",
               "type": "address"
@@ -7877,6 +7968,19 @@
           "name": "setLeaderboard",
           "outputs": [],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "solvedSeq",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -7943,7 +8047,7 @@
       ]
     },
     "Plinko_Proxy": {
-      "address": "0xA33f2be3A194B342D03E2E876351010e42E0BB39",
+      "address": "0x113C11EF97Bc6D004D776377Ad7a533235AcF88C",
       "abi": [
         {
           "inputs": [
