@@ -134,7 +134,7 @@ contract Crash is
         bool isWin = rand < winRate;
 
         // check if win
-        uint256 _rewardAmount = betAmount * multiplier;
+        uint256 _rewardAmount = betAmount * multiplier / 100;
         if (!isWin) {
             _rewardAmount = 0;
         }
