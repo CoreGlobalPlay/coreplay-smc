@@ -10,8 +10,8 @@ async function main() {
   /// SetBet
   await leaderBoardContract.setMinBet(parseEther("0.00025"));
   console.log("setMinBet: 0.00025");
-  await leaderBoardContract.setMaxBet(parseEther("0.2"));
-  console.log("setMaxBet: 0.2");
+  // await leaderBoardContract.setMaxBet(parseEther("0.2"));
+  // console.log("setMaxBet: 0.2");
 }
 
 main().catch((error) => {
